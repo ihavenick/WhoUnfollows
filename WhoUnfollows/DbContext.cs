@@ -1,18 +1,16 @@
-﻿using System;
-using System.IO;
-using InstagramApiSharp.Classes.Models;
+﻿using InstagramApiSharp.Classes.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace WhoUnfollows
 {
-        public class ApplicationDbContext : DbContext
-        {
-            /// <summary>
-            /// Manipulate the posts table
-            /// </summary>
-            /// <value>The property that allows to access the Posts table</value>
-            
-            public DbSet<InstaUserShort> TakipEtmeyenler { get; set; }
+    public class ApplicationDbContext : DbContext
+    {
+        /// <summary>
+        /// Manipulate the posts table
+        /// </summary>
+        /// <value>The property that allows to access the Posts table</value>
+
+        public DbSet<InstaUserShort> TakipEtmeyenler { get; set; }
 
 
         private string DatabasePath { get; set; }
@@ -39,11 +37,11 @@ namespace WhoUnfollows
                 .HasKey(o => o.Pk);
 
 
-            
+
         }
 
 
     }
 
 }
-    
+

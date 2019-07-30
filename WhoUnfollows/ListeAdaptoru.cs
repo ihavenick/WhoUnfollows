@@ -1,16 +1,11 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using InstagramApiSharp.API;
+using System;
+using System.Collections.Generic;
 
 namespace WhoUnfollows
 {
@@ -68,11 +63,11 @@ namespace WhoUnfollows
             var itemid = (int)resim.Tag;
 
             var item = items[itemid];
-           // Android.Widget.Toast.MakeText(this, item.kullaniciAdi, Android.Widget.ToastLength.Short).Show();
+            // Android.Widget.Toast.MakeText(this, item.kullaniciAdi, Android.Widget.ToastLength.Short).Show();
             var uri = Android.Net.Uri.Parse("http://instagram.com/" + item.kullaniciAdi);
             var intent = new Intent(Intent.ActionView, uri);
             context.StartActivity(intent);
-           // StartActivity(intent);
+            // StartActivity(intent);
         }
 
         private void deneme(object sender, EventArgs e)
@@ -84,7 +79,7 @@ namespace WhoUnfollows
             var item = items[iteminidsi];
             gelen.UserProcessor.UnFollowUserAsync(item.userId);
             //button.Visibility = Android.Views.ViewStates.Invisible;
-            button.Text =   "Çıkıldı";
+            button.Text = "Çıkıldı";
             button.Enabled = false;
             items.Remove(item);
 

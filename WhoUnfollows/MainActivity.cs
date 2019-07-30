@@ -1,19 +1,18 @@
 ﻿using Android.App;
-using Android.Widget;
+using Android.Content;
+using Android.Graphics;
 using Android.OS;
-using System.Net.Http;
-using System;
-using System.Linq;
+using Android.Widget;
+using InstagramApiSharp;
+using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Logger;
-using InstagramApiSharp.API.Builder;
-using InstagramApiSharp;
-using System.IO;
-using Android.Graphics;
-using System.Net;
-using System.Collections.Generic;
-using Android.Content;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
 
 namespace WhoUnfollows
 {

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minWidth="25px"
+	android:minHeight="25px"
+	android:background="#ffff6b58">
+
+
+
+	<EditText
+		android:inputType="textEmailAddress"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:id="@+id/tbEmail"
+		android:layout_marginLeft="160.0dp"
+		android:textColorHint="#ffffffff"
+		android:hint="Username"
+		android:textSize="22dp"
+		android:textColor="#ffffffff" />
+	<ImageView
+		android:id="@+id/imageLogo"
+		android:layout_height="400.0dp"
+		android:layout_width="400.0dp"
+		android:layout_marginTop="10.0dp"
+		android:layout_marginBottom="1.0dp"
+		android:layout_centerVertical="false"
+		android:layout_centerHorizontal="true"
+		tools:src="@mipmap/logo1"
+		android:src="@mipmap/logo1"
+		android:layout_above="@id/tbEmail"
+		android:layout_marginRight="88.3dp"
+		android:layout_marginLeft="100.0dp" 
+    />
+	<EditText
+		android:inputType="textPassword"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/tbEmail"
+		android:layout_centerHorizontal="true"
+		android:layout_marginLeft="160.0dp"
+		android:layout_marginTop="32dp"
+		android:id="@+id/tbPassword"
+		android:hint="Password"
+		android:password="true"
+		android:textSize="22dp"
+		android:textColor="#ffffffff"
+		android:textColorHint="#ffffffff" />
+
+	<Button
+		android:id="@+id/myButton"
+		android:layout_width="152.0dp"
+		android:layout_height="wrap_content"
+		android:text="Login"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="45.0dp"
+		android:layout_below="@id/tbPassword"
+		android:shadowColor="#ffff0000"
+		android:shadowDx="5"
+		android:shadowDy="5"
+		android:background="#ff605c5c"
+		android:textColor="#ffffffff"
+		android:textColorHint="#ffffffff"
+		android:textSize="22dp" />
+
+	<ProgressBar
+		android:id="@+id/progressBar1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/myButton"
+		android:visibility="invisible"
+    />
+
+
+</RelativeLayout>

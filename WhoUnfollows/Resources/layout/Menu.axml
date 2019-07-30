@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    
+    >
+    
+    <RelativeLayout
+        
+         android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="25px"
+        android:visibility="invisible"
+    android:minHeight="25px"
+    android:id="@+id/Yukleme"
+    android:background="#ffff6b58">
+        
+        <ProgressBar
+            android:id="@+id/progressBar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+        android:visibility="visible"
+    />
+           
+        
+        
+   </RelativeLayout>
+    
+    
+<RelativeLayout
+    
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="25px"
+        android:visibility="visible"
+    android:minHeight="25px"
+    android:id="@+id/AnaSayfa"
+    android:background="#ffff6b58">
+
+    <ImageView
+            android:layout_height="190.0dp"
+        android:layout_width="190.0dp"
+        android:id="@+id/imageView1"
+        android:background="#ff090000" 
+        android:layout_marginTop="100.0dp"
+        android:layout_marginBottom="120.0dp"
+        android:layout_centerVertical="false"
+        android:layout_centerHorizontal="true"
+        
+        />
+    
+    
+    <TextView
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+            android:layout_marginBottom="30dp"
+            
+        android:layout_centerHorizontal="true"
+        android:id="@+id/kullaniciAdi" />
+        
+        
+        
+        
+        
+        
+        
+        <TextView
+        android:text="Takip Etmeyenler: \n "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+            
+        android:layout_below="@id/kullaniciAdi"
+            android:layout_marginBottom="30dp"
+        android:id="@+id/textView1" />
+        
+        
+        <TextView
+        android:text="Takipçi: "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="80.0dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="30dp"
+        android:layout_below="@id/textView1"
+        android:id="@+id/takipciler" />
+    
+    
+        
+        
+        <TextView
+        android:text="Takip: "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+            android:layout_marginBottom="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
+            android:layout_marginRight="80dp"
+            android:layout_below="@id/textView1"
+        android:id="@+id/takipedilenler" />
+        
+        
+        
+        
+        
+        <ImageButton
+        android:id="@+id/logOut"
+        android:layout_width="85.0dp"
+        android:layout_marginTop="10.0dp"
+            android:layout_marginRight="10.0dp"
+        android:layout_height="53.0dp"
+        android:text="Logout"
+        android:layout_alignParentRight="true"
+        android:background="@@mipmap/logout"
+        android:textColor="#ffffffff"
+        android:textColorHint="#ffffffff"
+        android:textSize="20dp" />
+        
+        
+        
+        
+    <ImageButton
+        android:id="@+id/reflesh"
+        android:layout_width="85.0dp"
+        android:layout_marginTop="10.0dp"
+        android:layout_marginLeft="10.0dp"
+        android:layout_height="53.0dp"
+        android:text="Reflesh"
+        android:layout_alignParentLeft="true"
+        android:background="@@mipmap/logout"
+        android:textColor="#ffffffff"
+        android:textColorHint="#ffffffff"
+        android:textSize="20dp" />
+
+
+</RelativeLayout>
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/takipcilerSayfasi"
+        android:visibility="invisible"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="#ffff6b58">
+    
+
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent" />
+
+        
+</RelativeLayout>
+
+ <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/hayranlarSayfasi"
+        android:visibility="invisible"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="#ffff6b58">
+    
+
+
+        <ListView
+            android:id="@+id/listView2"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent" />
+
+        
+</RelativeLayout>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/hakkindaSayfasi"
+    android:visibility="invisible"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="#ffff6b58">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/logo1"/>
+    
+      
+</RelativeLayout>
+</RelativeLayout>

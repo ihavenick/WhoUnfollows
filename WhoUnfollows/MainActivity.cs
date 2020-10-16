@@ -8,6 +8,8 @@ using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Logger;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,6 +52,8 @@ namespace WhoUnfollows
             ActionBar.SetDisplayShowHomeEnabled(false);
 
             SetContentView(Resource.Layout.Main);
+
+            SQLitePCL.Batteries.Init();
 
 
             // Get our button from the layout resource,
@@ -175,7 +179,9 @@ namespace WhoUnfollows
                 if (!logInResult.Succeeded)
                 {
                     Console.WriteLine($"Unable to login: {logInResult.Info.Message}");
-                    button.Text = $"giris basarisiz";
+                    button.Text = logInResult.Info.Message;
+
+                    return;
                 }
 
                 await girisYapti(button, _instaApi);
@@ -301,7 +307,7 @@ namespace WhoUnfollows
                 await db.Database.MigrateAsync(); //We need to ensure the latest Migration was added. This is different than EnsureDatabaseCreated.
 
 
-                if (await db.TakipEtmeyenler.CountAsync() < 1)
+                if (db.TakipEtmeyenler.Count() < 1)
                 {
                     var result = await instaApi.UserProcessor.GetUserFollowersAsync(instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
                     var followers = result.Value;

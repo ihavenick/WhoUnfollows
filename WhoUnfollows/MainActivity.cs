@@ -17,11 +17,13 @@ using InstagramApiSharp.Classes;
 using InstagramApiSharp.Logger;
 using Microsoft.EntityFrameworkCore;
 using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using SQLitePCL;
 using Xamarin.Essentials;
 using Debug = System.Diagnostics.Debug;
 using Environment = System.Environment;
 using Path = System.IO.Path;
+using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
 
 namespace WhoUnfollows
 {
@@ -134,6 +136,22 @@ namespace WhoUnfollows
 
         private async void butonTiklandiAsync(object sender, EventArgs e)
         {
+            var button = sender as Button;
+
+            var status = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
+
+            if (status != PermissionStatus.Granted)
+            {
+                if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
+                {
+                    button.Text = "Dosya saklama izni vermen gerekiyo";
+                    Toast.MakeText(Application.Context, "Dosya saklama izni vermen gerekiyo", ToastLength.Long).Show();
+                }
+
+                status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
+            }
+
+
             yuklemeBar.Visibility = ViewStates.Visible;
 
 
@@ -143,7 +161,6 @@ namespace WhoUnfollows
                 Password = txtPassword.Text
             };
 
-            var button = sender as Button;
 
             _instaApi = InstaApiBuilder.CreateBuilder()
                 .SetUser(userSession)
@@ -264,7 +281,7 @@ namespace WhoUnfollows
             try
             {
                 await db.Database
-                    .MigrateAsync(); 
+                    .MigrateAsync();
 
 
                 if (db.TakipEtmeyenler.Count() < 1)
@@ -293,13 +310,11 @@ namespace WhoUnfollows
                     takipedilenler.Text = "Takip: " + following.Count;
                     kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
 
-               
-
 
                     foreach (var item in takipetmeyenler)
                     {
                         takipci.Text += item.UserName;
-                        
+
 
                         tableItems.Add(new TableItem
                         {
@@ -320,8 +335,6 @@ namespace WhoUnfollows
                             userId = item.Pk
                         });
 
-
-                    
 
                     await db.SaveChangesAsync();
                 }
@@ -409,7 +422,6 @@ namespace WhoUnfollows
 
             foreach (var item in takipetmeyenler)
             {
-
                 tableItems.Add(new TableItem
                 {
                     kullaniciAdi = item.UserName,

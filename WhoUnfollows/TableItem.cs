@@ -8,6 +8,5 @@ namespace WhoUnfollows
         public string AdiSoyadi { get; set; }
         public long userId { get; set; }
         public Bitmap Resim { get; set; }
-
     }
 }

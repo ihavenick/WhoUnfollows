@@ -1,20 +1,19 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
 using Android.App;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
 using InstagramApiSharp.API;
-using System;
-using System.Collections.Generic;
+using Uri = Android.Net.Uri;
 
 namespace WhoUnfollows
 {
-
     public class ListeAdaptoru2 : BaseAdapter<TableItem>
     {
-        List<TableItem> items;
-        Activity context;
-        IInstaApi gelen;
+        private readonly Activity context;
+        private readonly IInstaApi gelen;
+        private readonly List<TableItem> items;
 
 
         public ListeAdaptoru2(Activity context, List<TableItem> items, IInstaApi instaApi)
@@ -23,22 +22,20 @@ namespace WhoUnfollows
             this.context = context;
             this.items = items;
         }
+
+        public override TableItem this[int position] => items[position];
+
+        public override int Count => items.Count;
+
         public override long GetItemId(int position)
         {
             return position;
         }
-        public override TableItem this[int position]
-        {
-            get { return items[position]; }
-        }
-        public override int Count
-        {
-            get { return items.Count; }
-        }
+
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             var item = items[position];
-            View view = convertView;
+            var view = convertView;
             if (view == null) // no view to re-use, create new
                 view = context.LayoutInflater.Inflate(Resource.Layout.takipciler, null);
             view.FindViewById<TextView>(Resource.Id.Text1).Text = item.kullaniciAdi;
@@ -48,8 +45,7 @@ namespace WhoUnfollows
             view.FindViewById<ImageView>(Resource.Id.Image).Click += profilac;
 
 
-
-            Button b = view.FindViewById<Button>(Resource.Id.Buttonn);
+            var b = view.FindViewById<Button>(Resource.Id.Buttonn);
 
             b.Visibility = ViewStates.Invisible;
 
@@ -59,11 +55,11 @@ namespace WhoUnfollows
         private void profilac(object sender, EventArgs e)
         {
             var resim = sender as ImageView;
-            var itemid = (int)resim.Tag;
+            var itemid = (int) resim.Tag;
 
             var item = items[itemid];
             // Android.Widget.Toast.MakeText(this, item.kullaniciAdi, Android.Widget.ToastLength.Short).Show();
-            var uri = Android.Net.Uri.Parse("http://instagram.com/" + item.kullaniciAdi);
+            var uri = Uri.Parse("http://instagram.com/" + item.kullaniciAdi);
             var intent = new Intent(Intent.ActionView, uri);
             context.StartActivity(intent);
             // StartActivity(intent);
@@ -71,17 +67,15 @@ namespace WhoUnfollows
 
         private void deneme(object sender, EventArgs e)
         {
-
             var button = sender as Button;
             // var userid = (long)button.Tag;
-            var iteminidsi = (int)button.Tag;
+            var iteminidsi = (int) button.Tag;
             var item = items[iteminidsi];
             gelen.UserProcessor.UnFollowUserAsync(item.userId);
             //button.Visibility = Android.Views.ViewStates.Invisible;
             button.Text = "Çıkıldı";
             button.Enabled = false;
             items.Remove(item);
-
         }
     }
 }

@@ -60,7 +60,7 @@ namespace WhoUnfollows
             Platform.Init(this, savedInstanceState);
             Batteries.Init();
 
-            var button = FindViewById<Button>(Resource.Id.myButton);
+            var button = FindViewById<ImageButton>(Resource.Id.myButton);
 
             yuklemeBar = FindViewById<ProgressBar>(Resource.Id.progressBar1);
 
@@ -136,7 +136,7 @@ namespace WhoUnfollows
 
         private async void butonTiklandiAsync(object sender, EventArgs e)
         {
-            var button = sender as Button;
+            var button = sender as ImageButton;
 
             var status = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
 
@@ -144,7 +144,7 @@ namespace WhoUnfollows
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
                 {
-                    button.Text = "Dosya saklama izni vermen gerekiyo";
+                    //button.Text = "Dosya saklama izni vermen gerekiyo";
                     Toast.MakeText(Application.Context, "Dosya saklama izni vermen gerekiyo", ToastLength.Long).Show();
                 }
 
@@ -175,7 +175,7 @@ namespace WhoUnfollows
                 if (!logInResult.Succeeded)
                 {
                     Console.WriteLine($"Unable to login: {logInResult.Info.Message}");
-                    button.Text = logInResult.Info.Message;
+                    //button.Text = logInResult.Info.Message;
                     Toast.MakeText(Application.Context, logInResult.Info.Exception.Message, ToastLength.Long).Show();
                     return;
                 }
@@ -190,7 +190,7 @@ namespace WhoUnfollows
             }
         }
 
-        private async Task girisYapti(Button button, IInstaApi instaApi)
+        private async Task girisYapti(ImageButton button, IInstaApi instaApi)
         {
             SetContentView(Resource.Layout.Menu);
 
@@ -290,7 +290,7 @@ namespace WhoUnfollows
                         instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
                     var followers = result.Value;
                     var anyDuplicate = followers.GroupBy(x => x.Pk).Any(g => g.Count() > 1);
-                    button.Text = $"{followers.Count} takipci";
+                    //button.text = $"{followers.Count} takipci";
 
                     var takipcii = FindViewById<TextView>(Resource.Id.textView1);
                     var takipciler = FindViewById<TextView>(Resource.Id.takipciler);

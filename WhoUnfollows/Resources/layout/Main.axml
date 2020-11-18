@@ -51,7 +51,7 @@
 		android:textColor="#ffffffff"
 		android:textColorHint="#ffffffff" />
 
-	<Button
+	<ImageButton
 		android:id="@+id/myButton"
 		android:layout_width="152.0dp"
 		android:layout_height="wrap_content"
@@ -60,9 +60,9 @@
 		android:layout_marginTop="45.0dp"
 		android:layout_below="@id/tbPassword"
 		android:shadowColor="#ffff0000"
+		android:background="@@mipmap/logout"
 		android:shadowDx="5"
 		android:shadowDy="5"
-		android:background="#ff605c5c"
 		android:textColor="#ffffffff"
 		android:textColorHint="#ffffffff"
 		android:textSize="22dp" />

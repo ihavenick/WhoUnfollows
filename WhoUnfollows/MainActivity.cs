@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Gms.Ads;
 using Android.Graphics;
 using Android.OS;
 using Android.Views;
@@ -69,8 +70,13 @@ namespace WhoUnfollows
 
 
             CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
+                
+            
+            MobileAds.Initialize(this);
+ 
+            
 
-
+            
             userSession = new UserSessionData
             {
                 UserName = "",
@@ -212,7 +218,12 @@ namespace WhoUnfollows
 
             ActionBar.NavigationMode = ActionBarNavigationMode.Tabs;
             ActionBar.Show();
-
+            
+            var adview = FindViewById<AdView>(Resource.Id.adView);
+ 
+            //Test device request.
+            AdRequest adRequest = new AdRequest.Builder().AddTestDevice("33BE2250B43518CCDA7DE426D04EE231").Build();
+            adview.LoadAd(adRequest);
 
             var rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
             var rTakipci = FindViewById<RelativeLayout>(Resource.Id.takipcilerSayfasi);
@@ -270,8 +281,9 @@ namespace WhoUnfollows
                 rHakkinda.Visibility = ViewStates.Visible;
             };
             ActionBar.AddTab(tab4);
+            
 
-
+            
             var url = instaApi.GetLoggedUser().LoggedInUser.ProfilePicture;
 
             var logout = FindViewById<ImageButton>(Resource.Id.logOut);

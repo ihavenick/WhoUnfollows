@@ -69,15 +69,10 @@ namespace WhoUnfollows
             txtEmail = FindViewById<EditText>(Resource.Id.tbEmail);
             txtPassword = FindViewById<EditText>(Resource.Id.tbPassword);
 
-
             CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
-                
-            
-            MobileAds.Initialize(this);
- 
-            
 
-            
+            MobileAds.Initialize(this);
+
             userSession = new UserSessionData
             {
                 UserName = "",
@@ -110,7 +105,12 @@ namespace WhoUnfollows
             }
             catch (Exception er)
             {
-                Console.WriteLine(er);
+                var dlgAlert = new AlertDialog.Builder(this);
+                dlgAlert.SetTitle("hata");
+                dlgAlert.SetMessage(er.Message);
+
+                dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
+                dlgAlert.Show();
             }
 
 
@@ -150,10 +150,8 @@ namespace WhoUnfollows
             if (status != PermissionStatus.Granted)
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
-                {
                     //button.Text = "Dosya saklama izni vermen gerekiyo";
                     Toast.MakeText(Application.Context, "Dosya saklama izni vermen gerekiyo", ToastLength.Long).Show();
-                }
 
                 status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
             }
@@ -184,19 +182,11 @@ namespace WhoUnfollows
                     Console.WriteLine($"Unable to login: {logInResult.Info.Message}");
                     //button.Text = logInResult.Info.Message;
                     Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long).Show();
-                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+                    var dlgAlert = new AlertDialog.Builder(this);
                     dlgAlert.SetTitle(logInResult.Info.Message);
                     dlgAlert.SetMessage(logInResult.Info.Message);
- 
-                    dlgAlert.SetPositiveButton("OK", delegate
-                    {
-                        dlgAlert.Dispose();
-                        
- 
-                        
- 
-                        
-                    });
+
+                    dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
                     dlgAlert.Show();
                     yuklemeBar.Visibility = ViewStates.Invisible;
                     return;
@@ -219,11 +209,11 @@ namespace WhoUnfollows
 
             ActionBar.NavigationMode = ActionBarNavigationMode.Tabs;
             ActionBar.Show();
-            
+
             var adview = FindViewById<AdView>(Resource.Id.adView);
- 
+
             //Test device request.
-            AdRequest adRequest = new AdRequest.Builder().AddTestDevice("33BE2250B43518CCDA7DE426D04EE231").Build();
+            var adRequest = new AdRequest.Builder().AddTestDevice("33BE2250B43518CCDA7DE426D04EE231").Build();
             adview.LoadAd(adRequest);
 
             var rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
@@ -234,7 +224,7 @@ namespace WhoUnfollows
 
             var tab = ActionBar.NewTab();
             tab.SetText("Bilgi");
-            //tab.SetIcon(Resource.Drawable.tab1_icon);
+            tab.SetIcon(Resource.Mipmap.Icon);
             tab.TabSelected += (sender2, args) =>
             {
                 rAnaSayfa.Visibility = ViewStates.Visible;
@@ -282,9 +272,7 @@ namespace WhoUnfollows
                 rHakkinda.Visibility = ViewStates.Visible;
             };
             ActionBar.AddTab(tab4);
-            
 
-            
             var url = instaApi.GetLoggedUser().LoggedInUser.ProfilePicture;
 
             var logout = FindViewById<ImageButton>(Resource.Id.logOut);
@@ -299,9 +287,6 @@ namespace WhoUnfollows
             imageView.SetImageBitmap(GetBitmapFromUrl(url));
 
 
-            var takipci = FindViewById<TextView>(Resource.Id.textView1);
-
-
             var dbFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             var fileName = "takipci.db";
             var dbFullPath = Path.Combine(dbFolder, fileName);
@@ -311,19 +296,17 @@ namespace WhoUnfollows
                 await db.Database
                     .MigrateAsync();
 
+                var takipcii = FindViewById<TextView>(Resource.Id.textView1);
+                var takipciler = FindViewById<TextView>(Resource.Id.takipciler);
+                var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
+                var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
 
                 if (db.TakipEtmeyenler.Count() < 1)
                 {
                     var result = await instaApi.UserProcessor.GetUserFollowersAsync(
                         instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
                     var followers = result.Value;
-                    var anyDuplicate = followers.GroupBy(x => x.Pk).Any(g => g.Count() > 1);
-                    //button.text = $"{followers.Count} takipci";
 
-                    var takipcii = FindViewById<TextView>(Resource.Id.textView1);
-                    var takipciler = FindViewById<TextView>(Resource.Id.takipciler);
-                    var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
-                    var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
 
                     var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
                         instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
@@ -336,14 +319,10 @@ namespace WhoUnfollows
                     takipcii.Text = "Takip Etmeyen: " + takipetmeyenler.Count;
                     takipciler.Text = "Takipçi: " + followers.Count;
                     takipedilenler.Text = "Takip: " + following.Count;
-                    kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
 
 
                     foreach (var item in takipetmeyenler)
                     {
-                        //takipci.Text += item.UserName;
-
-
                         tableItems.Add(new TableItem
                         {
                             kullaniciAdi = item.UserName,
@@ -369,10 +348,6 @@ namespace WhoUnfollows
                 else
                 {
                     foreach (var item in db.TakipEtmeyenler)
-                    {
-                       // takipci.Text += item.UserName;
-                        // adlar.Add(item.UserName);
-
                         tableItems.Add(new TableItem
                         {
                             kullaniciAdi = item.UserName,
@@ -380,8 +355,10 @@ namespace WhoUnfollows
                             Resim = GetBitmapFromUrl(item.ProfilePicUrl),
                             userId = item.Pk
                         });
-                    }
+                    takipcii.Text = "Takip Etmeyen: " + db.TakipEtmeyenler.Count();
                 }
+
+                kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
             }
             catch (Exception ex)
             {
@@ -403,77 +380,102 @@ namespace WhoUnfollows
 
         private async void refresh_clickAsync(object sender, EventArgs e)
         {
-            ActionBar.Hide();
             var anaekran = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
             anaekran.Visibility = ViewStates.Invisible;
 
             var yukleme = FindViewById<RelativeLayout>(Resource.Id.Yukleme);
             yukleme.Visibility = ViewStates.Visible;
-
-
-            tableItems.Clear();
-
-
-            IInstaApi instaApi;
-
-            if (_instaApi != null)
-                instaApi = _instaApi;
-            else
-                instaApi = _instaApi2;
-
-            var takipci = FindViewById<TextView>(Resource.Id.textView1);
-            var takipciler = FindViewById<TextView>(Resource.Id.takipciler);
-            var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
-            var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
-
-            var result = await instaApi.UserProcessor.GetUserFollowersAsync(
-                instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
-            var followers = result.Value;
-            var anyDuplicate = followers.GroupBy(x => x.Pk).Any(g => g.Count() > 1);
-
-
-            var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
-                instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
-            var following = result2.Value;
-
-            var takipetmeyenler = following.Except(followers).ToList();
-            var hayranlar = followers.Except(following).ToList();
-
-
-            foreach (var item in db.TakipEtmeyenler) db.TakipEtmeyenler.Remove(item);
-            await db.SaveChangesAsync();
-
-            takipci.Text = "Takip Etmeyen: " + takipetmeyenler.Count;
-            takipciler.Text = "Takipçi: " + followers.Count;
-            takipedilenler.Text = "Takip: " + following.Count;
-            kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
-
-            foreach (var item in takipetmeyenler)
+            try
             {
-                tableItems.Add(new TableItem
+                ActionBar.Hide();
+
+                tableItems.Clear();
+
+
+                IInstaApi instaApi;
+
+                if (_instaApi != null)
+                    instaApi = _instaApi;
+                else
+                    instaApi = _instaApi2;
+
+                var takipci = FindViewById<TextView>(Resource.Id.textView1);
+                var takipciler = FindViewById<TextView>(Resource.Id.takipciler);
+                var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
+                var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
+
+                var result = await instaApi.UserProcessor.GetUserFollowersAsync(
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
+                var followers = result.Value;
+
+                var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
+                var following = result2.Value;
+
+                var takipetmeyenler = following.Except(followers).ToList();
+                var hayranlar = followers.Except(following).ToList();
+
+
+                foreach (var item in db.TakipEtmeyenler) db.TakipEtmeyenler.Remove(item);
+                await db.SaveChangesAsync();
+
+                takipci.Text = "Takip Etmeyen: " + takipetmeyenler.Count;
+                takipciler.Text = "Takipçi: " + followers.Count;
+                takipedilenler.Text = "Takip: " + following.Count;
+                kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
+
+                foreach (var item in takipetmeyenler)
                 {
-                    kullaniciAdi = item.UserName,
-                    AdiSoyadi = item.FullName,
-                    Resim = GetBitmapFromUrl(item.ProfilePicUrl),
-                    userId = item.Pk
-                });
-                if (!db.TakipEtmeyenler.Contains(item)) await db.TakipEtmeyenler.AddAsync(item);
+                    tableItems.Add(new TableItem
+                    {
+                        kullaniciAdi = item.UserName,
+                        AdiSoyadi = item.FullName,
+                        Resim = GetBitmapFromUrl(item.ProfilePicUrl),
+                        userId = item.Pk
+                    });
+                    if (!db.TakipEtmeyenler.Contains(item)) await db.TakipEtmeyenler.AddAsync(item);
+                }
+
+                foreach (var item in hayranlar)
+                    hayranItem.Add(new TableItem
+                    {
+                        kullaniciAdi = item.UserName,
+                        AdiSoyadi = item.FullName,
+                        Resim = GetBitmapFromUrl(item.ProfilePicUrl),
+                        userId = item.Pk
+                    });
+
+
+                await db.SaveChangesAsync();
+                yukleme.Visibility = ViewStates.Invisible;
+                anaekran.Visibility = ViewStates.Visible;
+                ActionBar.Show();
             }
-
-            foreach (var item in hayranlar)
-                hayranItem.Add(new TableItem
+            catch (Exception exception)
+            {
+                if (exception.Message == "The remote server returned an error: (410) Gone.")
                 {
-                    kullaniciAdi = item.UserName,
-                    AdiSoyadi = item.FullName,
-                    Resim = GetBitmapFromUrl(item.ProfilePicUrl),
-                    userId = item.Pk
-                });
+                    yukleme.Visibility = ViewStates.Invisible;
+                    anaekran.Visibility = ViewStates.Visible;
+                    ActionBar.Show();
+                }
+                else
+                {
+                    var dlgAlert = new AlertDialog.Builder(this);
+                    dlgAlert.SetTitle("hata");
+                    dlgAlert.SetMessage(exception.Message);
 
+                    dlgAlert.SetPositiveButton("OK", delegate
+                    {
+                        dlgAlert.Dispose();
 
-            await db.SaveChangesAsync();
-            yukleme.Visibility = ViewStates.Invisible;
-            anaekran.Visibility = ViewStates.Visible;
-            ActionBar.Show();
+                        yukleme.Visibility = ViewStates.Invisible;
+                        anaekran.Visibility = ViewStates.Visible;
+                        ActionBar.Show();
+                    });
+                    dlgAlert.Show();
+                }
+            }
         }
 
         public Bitmap GetBitmapFromUrl(string url)

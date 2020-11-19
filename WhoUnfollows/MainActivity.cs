@@ -176,7 +176,8 @@ namespace WhoUnfollows
                 {
                     Console.WriteLine($"Unable to login: {logInResult.Info.Message}");
                     //button.Text = logInResult.Info.Message;
-                    Toast.MakeText(Application.Context, logInResult.Info.Exception.Message, ToastLength.Long).Show();
+                    Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long).Show();
+                    yuklemeBar.Visibility = ViewStates.Invisible;
                     return;
                 }
 
@@ -313,7 +314,7 @@ namespace WhoUnfollows
 
                     foreach (var item in takipetmeyenler)
                     {
-                        takipci.Text += item.UserName;
+                        //takipci.Text += item.UserName;
 
 
                         tableItems.Add(new TableItem
@@ -342,7 +343,7 @@ namespace WhoUnfollows
                 {
                     foreach (var item in db.TakipEtmeyenler)
                     {
-                        takipci.Text += item.UserName;
+                       // takipci.Text += item.UserName;
                         // adlar.Add(item.UserName);
 
                         tableItems.Add(new TableItem

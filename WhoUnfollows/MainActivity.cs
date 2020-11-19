@@ -177,6 +177,20 @@ namespace WhoUnfollows
                     Console.WriteLine($"Unable to login: {logInResult.Info.Message}");
                     //button.Text = logInResult.Info.Message;
                     Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long).Show();
+                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+                    dlgAlert.SetTitle(logInResult.Info.Message);
+                    dlgAlert.SetMessage(logInResult.Info.Message);
+ 
+                    dlgAlert.SetPositiveButton("OK", delegate
+                    {
+                        dlgAlert.Dispose();
+                        
+ 
+                        
+ 
+                        
+                    });
+                    dlgAlert.Show();
                     yuklemeBar.Visibility = ViewStates.Invisible;
                     return;
                 }

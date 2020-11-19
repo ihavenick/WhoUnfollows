@@ -50,6 +50,7 @@ namespace WhoUnfollows
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            SetTheme(Resource.Style.MyTheme);
             base.OnCreate(savedInstanceState);
 
             ActionBar.Hide();

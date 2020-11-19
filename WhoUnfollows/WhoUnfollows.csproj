@@ -132,8 +132,8 @@
     <AndroidResource Include="Resources\layout\UnFollowers.axml" />
     <AndroidResource Include="Resources\layout\takipciler.axml" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\logo1.png" />
-    <AndroidResource Include="Resources\drawable\splash_screen.axml" />
-    <AndroidResource Include="Resources\values\colors.xml" />
+    <AndroidResource Include="Resources\drawable\splash_screen.xml" />
+    <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\drawable\splash_logo.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\logout.png" />
   </ItemGroup>
@@ -154,6 +154,14 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-xxhdpi\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\launch_screen.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\colors.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

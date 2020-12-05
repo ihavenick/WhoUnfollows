@@ -6,11 +6,13 @@ using System.Net;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Gestures;
 using Android.Gms.Ads;
 using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using Google.Android.Material.Tabs.AppCompat.App;
 using InstagramApiSharp;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
@@ -26,11 +28,13 @@ using Environment = System.Environment;
 using Path = System.IO.Path;
 using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
 
+
 namespace WhoUnfollows
 {
-    [Activity(Label = "WhoUnfollows", MainLauncher = true, WindowSoftInputMode = SoftInput.AdjustResize,
+    [Activity(Label = "WhoUnfollows", MainLauncher = true, WindowSoftInputMode = SoftInput.AdjustResize, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,
         Icon = "@mipmap/icon")]
-    public class MainActivity : Activity
+    public class MainActivity : Activity,
+        GestureDetector.IOnGestureListener, View.IOnTouchListener
     {
         private static readonly string dosyayolu = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         private readonly List<TableItem> hayranItem = new List<TableItem>();
@@ -44,8 +48,87 @@ namespace WhoUnfollows
         private EditText txtEmail;
         private EditText txtPassword;
         private UserSessionData userSession;
-
+        private GestureDetector gestureDetector;  
         private ProgressBar yuklemeBar;
+        private RelativeLayout rAnaSayfa;
+        private RelativeLayout rTakipci;
+        private RelativeLayout rHayran;
+        private RelativeLayout rHakkinda;
+        private int imageIndex = 0;
+
+        private readonly int SWIPE_MIN_DISTANCE = 120;  
+        private static int SWIPE_MAX_OFF_PATH = 250;  
+        private static int SWIPE_THRESHOLD_VELOCITY = 200;  
+
+
+       
+
+         
+        public bool OnDown(MotionEvent e) {  
+            Toast.MakeText(this, "On Down", ToastLength.Short).Show();  
+            return true;  
+        }  
+
+        public bool OnFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {  
+            bool result = false;  
+            try {  
+                float diffY = e2.GetY() - e1.GetY();  
+                float diffX = e2.GetX() - e1.GetX();  
+                if (Math.Abs(diffX) > Math.Abs(diffY)) {  
+                    if (Math.Abs(diffX) > SWIPE_THRESHOLD_VELOCITY && Math.Abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {  
+                        if (diffX > 0) {  
+                            //onSwipeRight();    
+                            if (imageIndex > 0) {  
+                                imageIndex--;  
+                            }  
+                            //txtGestureView.Text = "Swiped Right";  
+                            rAnaSayfa.Visibility = ViewStates.Invisible;
+                            rTakipci.Visibility = ViewStates.Visible;
+                            Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
+                            rHayran.Visibility = ViewStates.Invisible;
+                            rHakkinda.Visibility = ViewStates.Invisible;
+                        } else {  
+                            if (imageIndex < 28) {  
+                                imageIndex++;  
+                            }  
+                            //onSwipeLeft();    
+                            //txtGestureView.Text = "Swiped Left";  Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
+                            Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
+                        }  
+                        result = true;  
+                    }  
+                } else  
+                if (Math.Abs(diffY) > SWIPE_THRESHOLD_VELOCITY && Math.Abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {  
+                    if (diffY > 0) {  
+                        //onSwipeBottom();    
+                        //txtGestureView.Text = "Swiped Bottom";  Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
+                        Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
+                    } else {  
+                        //onSwipeTop();    
+                       // txtGestureView.Text = "Swiped Top";  Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
+                       Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
+                    }  
+                    result = true;  
+                }  
+            } catch (Exception exception) {  
+                Console.WriteLine(exception.Message);  
+            }  
+            return result;  
+        }  
+        public void OnLongPress(MotionEvent e) {  
+            Toast.MakeText(this, "On Long Press", ToastLength.Short).Show();  
+        }  
+        public bool OnScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {  
+            Toast.MakeText(this, "On Scroll", ToastLength.Short).Show();  
+            return true;  
+        }  
+        public void OnShowPress(MotionEvent e) {  
+            Toast.MakeText(this, "On Show Press", ToastLength.Short).Show();  
+        }  
+        public bool OnSingleTapUp(MotionEvent e) {  
+            Toast.MakeText(this, "On Single Tab Up", ToastLength.Short).Show();  
+            return true;  
+        }  
 
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -62,6 +145,8 @@ namespace WhoUnfollows
             Platform.Init(this, savedInstanceState);
             Batteries.Init();
 
+
+            gestureDetector = new GestureDetector(this,this);
             var button = FindViewById<ImageButton>(Resource.Id.myButton);
 
             yuklemeBar = FindViewById<ProgressBar>(Resource.Id.progressBar1);
@@ -215,12 +300,13 @@ namespace WhoUnfollows
             //Test device request.
             var adRequest = new AdRequest.Builder().AddTestDevice("33BE2250B43518CCDA7DE426D04EE231").Build();
             adview.LoadAd(adRequest);
-
-            var rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
-            var rTakipci = FindViewById<RelativeLayout>(Resource.Id.takipcilerSayfasi);
-            var rHayran = FindViewById<RelativeLayout>(Resource.Id.hayranlarSayfasi);
-            var rHakkinda = FindViewById<RelativeLayout>(Resource.Id.hakkindaSayfasi);
-
+            
+            rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa); 
+            rTakipci = FindViewById<RelativeLayout>(Resource.Id.takipcilerSayfasi);
+            rHayran = FindViewById<RelativeLayout>(Resource.Id.hayranlarSayfasi);
+            rHakkinda = FindViewById<RelativeLayout>(Resource.Id.hakkindaSayfasi);
+            
+            
 
             var tab = ActionBar.NewTab();
             tab.SetText("Bilgi");
@@ -488,6 +574,11 @@ namespace WhoUnfollows
             }
 
             return null;
+        }
+
+        public bool OnTouch(View? v, MotionEvent? e)
+        {
+            return true;
         }
     }
 }

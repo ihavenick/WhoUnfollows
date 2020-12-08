@@ -213,8 +213,7 @@
         android:minHeight="25px"
         android:background="#dbd49a">
 
-
-        <ImageView
+         <ImageView
             android:layout_width="200dp"
             android:layout_height="300dp"
             android:id="@+id/hakkindaLogo"
@@ -226,7 +225,7 @@
 
 
         <TextView
-            android:text="Uygulamayı Yapanlar"
+            android:text="Geliştiriciler"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -237,22 +236,25 @@
             android:id="@+id/uygulama"
             android:textColor="#4a1d10" />
         <TextView
-	        android:text="Ramazan Kabadayı @ramazankabadayi"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerVertical="true"
-	        android:layout_centerHorizontal="true"
-	        android:layout_alignParentRight="false"
-	        android:layout_marginRight="150.0dp"
-	        android:layout_below="@id/uygulama"
-	        android:id="@+id/ramazan"
-	        android:textColor="#4a1d10"
-	        android:layout_marginLeft="30.0dp" />
-        <TextView
-            android:text="Ata Çetin @atacetin_"
+            android:text="@ramazankabadayi"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_width="wrap_content"
+            android:layout_width="250.0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="false"
+            android:layout_marginRight="121.5dp"
+            android:layout_below="@id/uygulama"
+            android:id="@+id/ramazan"
+            android:textColor="#4a1d10"
+            android:textSize="15dp"
+            android:layout_marginLeft="131.6dp"
+            android:layout_marginBottom="4.6dp"
+            android:layout_marginTop="17.5dp" />
+        <TextView
+            android:text="@atacetin_"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="250.5dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
@@ -261,7 +263,10 @@
             android:layout_below="@id/ramazan"
             android:id="@+id/ata"
             android:textColor="#4a1d10"
-            android:layout_marginLeft="30.0dp" />
+            android:textSize="15dp"
+            android:layout_marginLeft="147.0dp" 
+            android:layout_marginTop="2.5dp"/>
+
 
     </RelativeLayout>
 </RelativeLayout>

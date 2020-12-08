@@ -173,6 +173,17 @@ namespace WhoUnfollows
 
             try
             {
+
+                var status = CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
+                
+                if (status.Result != PermissionStatus.Granted)
+                {
+                    if ( CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage).Result)
+                        
+                        Toast.MakeText(Application.Context, "Dosya saklama izni vermen gerekiyo", ToastLength.Long).Show();
+
+                    status =  CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
+                }
                 // load session file if exists
                 if (File.Exists(stateFile))
                 {
@@ -244,6 +255,19 @@ namespace WhoUnfollows
 
             yuklemeBar.Visibility = ViewStates.Visible;
 
+            if (txtEmail.Text == null && txtPassword.Text == null)
+            {
+                var dlgAlert = new AlertDialog.Builder(this);
+                dlgAlert.SetTitle("hata");
+                dlgAlert.SetMessage("Şifre ve kullanıcı adını boş bırakma");
+
+                dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
+                dlgAlert.Show();
+                return;
+                
+            }
+
+
 
             userSession = new UserSessionData
             {
@@ -298,15 +322,21 @@ namespace WhoUnfollows
             var adview = FindViewById<AdView>(Resource.Id.adView);
 
             //Test device request.
-            var adRequest = new AdRequest.Builder().AddTestDevice("33BE2250B43518CCDA7DE426D04EE231").Build();
-            adview.LoadAd(adRequest);
+            //var adRequest = new AdRequest.Builder().AddTestDevice("33BE2250B43518CCDA7DE426D04EE231").Build();
+            //adview.LoadAd(adRequest);
             
             rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa); 
             rTakipci = FindViewById<RelativeLayout>(Resource.Id.takipcilerSayfasi);
             rHayran = FindViewById<RelativeLayout>(Resource.Id.hayranlarSayfasi);
             rHakkinda = FindViewById<RelativeLayout>(Resource.Id.hakkindaSayfasi);
+            var yukleme = FindViewById<RelativeLayout>(Resource.Id.Yukleme);
             
-            
+
+            var ata = FindViewById<TextView>(Resource.Id.ata);
+            var ramazan = FindViewById<TextView>(Resource.Id.ramazan);
+
+            ata.Click += Ata_Click;
+            ramazan.Click += Ramazan_Click;
 
             var tab = ActionBar.NewTab();
             tab.SetText("Bilgi");
@@ -386,9 +416,17 @@ namespace WhoUnfollows
                 var takipciler = FindViewById<TextView>(Resource.Id.takipciler);
                 var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
                 var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
+                
+                
 
                 if (db.TakipEtmeyenler.Count() < 1)
                 {
+                    
+                    rAnaSayfa.Visibility = ViewStates.Invisible;
+
+                    
+                    yukleme.Visibility = ViewStates.Visible;
+
                     var result = await instaApi.UserProcessor.GetUserFollowersAsync(
                         instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
                     var followers = result.Value;
@@ -430,6 +468,9 @@ namespace WhoUnfollows
 
 
                     await db.SaveChangesAsync();
+                    rAnaSayfa.Visibility = ViewStates.Visible;
+
+                    yukleme.Visibility = ViewStates.Invisible;
                 }
                 else
                 {
@@ -445,6 +486,9 @@ namespace WhoUnfollows
                 }
 
                 kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
+                rAnaSayfa.Visibility = ViewStates.Visible;
+
+                yukleme.Visibility = ViewStates.Invisible;
             }
             catch (Exception ex)
             {
@@ -462,6 +506,23 @@ namespace WhoUnfollows
 
 
             listView2.Adapter = new ListeAdaptoru2(this, hayranItem, instaApi);
+            rAnaSayfa.Visibility = ViewStates.Visible;
+
+            yukleme.Visibility = ViewStates.Invisible;
+        }
+
+         void Ramazan_Click(object sender, EventArgs e)
+        {
+            var uri = Android.Net.Uri.Parse("http://instagram.com/ramazankabadayi");
+            var intent = new Intent(Intent.ActionView, uri);
+            this.StartActivity(intent);
+        }
+
+        private void Ata_Click(object sender, EventArgs e)
+        {
+            var uri = Android.Net.Uri.Parse("http://instagram.com/atacetin_");
+            var intent = new Intent(Intent.ActionView, uri);
+            this.StartActivity(intent);
         }
 
         private async void refresh_clickAsync(object sender, EventArgs e)

@@ -2,162 +2,162 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     
     >
-    
+
     <RelativeLayout
-        
-         android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minWidth="25px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minWidth="25px"
         android:visibility="invisible"
-    android:minHeight="25px"
-    android:id="@+id/Yukleme"
-    android:background="#ffff6b58">
-        
+        android:minHeight="25px"
+        android:id="@+id/Yukleme"
+        android:background="#dbd49a">
+
         <ProgressBar
             android:id="@+id/progressBar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-        android:visibility="visible"
+            android:visibility="visible"
     />
-           
-        
-        
-   </RelativeLayout>
-    
-    
-<RelativeLayout
-    
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minWidth="25px"
-        android:visibility="visible"
-    android:minHeight="25px"
-    android:id="@+id/AnaSayfa"
-    android:background="#ffff6b58">
 
-    <ImageView
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minWidth="25px"
+        android:visibility="visible"
+        android:minHeight="25px"
+        android:id="@+id/AnaSayfa"
+        android:background="#dbd49a">
+
+        <ImageView
             android:layout_height="190.0dp"
-        android:layout_width="190.0dp"
-        android:id="@+id/imageView1"
-        android:background="#ff090000" 
-        android:layout_marginTop="100.0dp"
-        android:layout_marginBottom="120.0dp"
-        android:layout_centerVertical="false"
-        android:layout_centerHorizontal="true"
+            android:layout_width="190.0dp"
+            android:id="@+id/imageView1"
+            android:background="#ff090000"
+            android:layout_marginTop="100.0dp"
+            android:layout_marginBottom="120.0dp"
+            android:layout_centerVertical="false"
+            android:layout_centerHorizontal="true"
         
         />
-    
-    
-    <TextView
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-            android:layout_marginBottom="30dp"
-            
-        android:layout_centerHorizontal="true"
-        android:id="@+id/kullaniciAdi" />
-        
-        
-        
-        
-        
-        
-        
+
+
         <TextView
-        android:text="Takip Etmeyenler: \n "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-            
-        android:layout_below="@id/kullaniciAdi"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="30dp"
-        android:id="@+id/textView1" />
-        
-        
+            android:layout_centerHorizontal="true"
+            android:id="@+id/kullaniciAdi"
+            android:textColor="#4a1d10"/>
+
+
+
+
+
+
+
         <TextView
-        android:text="Takipçi: "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="80.0dp"
+            android:text="Takip Etmeyenler: \n "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/kullaniciAdi"
+            android:layout_marginBottom="30dp"
+            android:id="@+id/textView1"
+            android:textColor="#4a1d10"/>
+
+
+        <TextView
+            android:text="Takipçi: "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="80.0dp"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="30dp"
-        android:layout_below="@id/textView1"
-        android:id="@+id/takipciler" />
-    
-    
-        
-        
+            android:layout_below="@id/textView1"
+            android:id="@+id/takipciler"
+            android:textColor="#4a1d10"/>
+
+
+
+
         <TextView
-        android:text="Takip: "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+            android:text="Takip: "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="80dp"
             android:layout_below="@id/textView1"
-        android:id="@+id/takipedilenler" />
-        
-        
-        
-        
-        
+            android:id="@+id/takipedilenler"
+            android:textColor="#4a1d10"/>
+
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-9927527797473679/5706022590">
+        </com.google.android.gms.ads.AdView>
+
+
         <ImageButton
-        android:id="@+id/logOut"
-        android:layout_width="85.0dp"
-        android:layout_marginTop="10.0dp"
-            android:layout_marginRight="10.0dp"
-        android:layout_height="53.0dp"
-        android:text="Logout"
-        android:layout_alignParentRight="true"
-        android:background="@@mipmap/logout"
-        android:textColor="#ffffffff"
-        android:textColorHint="#ffffffff"
-        android:textSize="20dp" />
-        
-        
-        
-        
-    <ImageButton
-        android:id="@+id/reflesh"
-        android:layout_width="85.0dp"
-        android:layout_marginTop="10.0dp"
-        android:layout_marginLeft="10.0dp"
-        android:layout_height="53.0dp"
-        android:text="Reflesh"
-        android:layout_alignParentLeft="true"
-        android:background="@@mipmap/logout"
-        android:textColor="#ffffffff"
-        android:textColorHint="#ffffffff"
-        android:textSize="20dp" />
+            android:id="@+id/logOut"
+            android:layout_width="30.0dp"
+            android:layout_marginTop="20.0dp"
+            android:layout_marginRight="20.0dp"
+            android:layout_height="30.0dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/logout"   />
 
 
-</RelativeLayout>
+        <ImageButton
+            android:id="@+id/reflesh"
+            android:layout_width="30.0dp"
+            android:layout_marginTop="20.0dp"
+            android:layout_marginLeft="20.0dp"
+            android:layout_height="30.0dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/refresh" />
 
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/takipcilerSayfasi"
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/takipcilerSayfasi"
         android:visibility="invisible"
-    android:minWidth="25px"
-    android:minHeight="25px"
-    android:background="#ffff6b58">
-    
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:background="#dbd49a">
+
 
 
         <ListView
@@ -165,18 +165,27 @@
             android:layout_height="fill_parent"
             android:layout_width="fill_parent" />
 
-        
-</RelativeLayout>
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        </com.google.android.gms.ads.AdView>
 
- <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/hayranlarSayfasi"
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/hayranlarSayfasi"
         android:visibility="invisible"
-    android:minWidth="25px"
-    android:minHeight="25px"
-    android:background="#ffff6b58">
-    
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:background="#dbd49a">
+
 
 
         <ListView
@@ -184,24 +193,80 @@
             android:layout_height="fill_parent"
             android:layout_width="fill_parent" />
 
-        
-</RelativeLayout>
-
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/hakkindaSayfasi"
-    android:visibility="invisible"
-    android:minWidth="25px"
-    android:minHeight="25px"
-    android:background="#ffff6b58">
-
-
-        <ImageView
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/logo1"/>
-    
-      
-</RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        </com.google.android.gms.ads.AdView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/hakkindaSayfasi"
+        android:visibility="visible"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:background="#dbd49a">
+
+         <ImageView
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:id="@+id/hakkindaLogo"
+            android:src="@mipmap/logo1"
+            android:layout_marginLeft="100.0dp"
+            android:layout_marginBottom="31.0dp" 
+             />
+
+
+
+        <TextView
+            android:text="Geliştiriciler"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="false"
+            android:layout_below="@id/hakkindaLogo"
+            android:id="@+id/uygulama"
+            android:textColor="#4a1d10" />
+        <TextView
+            android:text="@ramazankabadayi"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="250.0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="false"
+            android:layout_marginRight="121.5dp"
+            android:layout_below="@id/uygulama"
+            android:id="@+id/ramazan"
+            android:textColor="#4a1d10"
+            android:textSize="15dp"
+            android:layout_marginLeft="131.6dp"
+            android:layout_marginBottom="4.6dp"
+            android:layout_marginTop="17.5dp" />
+        <TextView
+            android:text="@atacetin_"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="250.5dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="103.0dp"
+            android:layout_below="@id/ramazan"
+            android:id="@+id/ata"
+            android:textColor="#4a1d10"
+            android:textSize="15dp"
+            android:layout_marginLeft="147.0dp" 
+            android:layout_marginTop="2.5dp"/>
+
+
+    </RelativeLayout>
 </RelativeLayout>

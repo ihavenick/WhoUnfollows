@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:minWidth="25px"
     android:minHeight="25px"
-    android:background="#ffff6b58">
+    android:background="#dbd49a">
     
 
 

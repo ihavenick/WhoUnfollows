@@ -20,6 +20,9 @@
     <AndroidLinkMode>Full</AndroidLinkMode>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>C:\Users\Prince\AppData\Local\Xamarin\Mono for Android\Keystore\Deneme\Deneme.keyInfo</AssemblyOriginatorKeyFile>
+    <PublicSign>false</PublicSign>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -111,13 +114,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ListeAdaptoru.cs" />
     <Compile Include="TableItem.cs" />
-    <Compile Include="DbContext.cs" />
-    <Compile Include="Migrations\20190708221351_inital.cs" />
-    <Compile Include="Migrations\20190708221351_inital.Designer.cs" />
-    <Compile Include="Migrations\ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="C:\Users\Prince\AppData\Local\Xamarin\Mono for Android\Keystore\Deneme\Deneme.keyInfo">
+      <Link>Deneme.keyInfo</Link>
+    </None>
+    <None Include="C:\Users\Prince\AppData\Local\Xamarin\Mono for Android\Keystore\Deneme\Deneme.keystore">
+      <Link>Deneme.keystore</Link>
+    </None>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />

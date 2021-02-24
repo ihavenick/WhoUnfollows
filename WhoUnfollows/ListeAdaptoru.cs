@@ -87,7 +87,7 @@ namespace WhoUnfollows
             if (!cevap.Succeeded) return;
             
             Toast.MakeText(context, "Takipten cıkılıyor", ToastLength.Short).Show();  
-            ProgressDialog.show(context, "Loading", "Wait while loading...");
+            
             items.Remove(items.SingleOrDefault(x => x.userId == kullaniciid));
             anaview.InvalidateViews();
             NotifyDataSetChanged();

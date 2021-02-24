@@ -325,6 +325,7 @@ namespace WhoUnfollows
         private async Task girisYapti(ImageButton button, IInstaApi instaApi)
         {
             SetContentView(Resource.Layout.Menu);
+            ProgressDialog progress = new ProgressDialog(this);
 
 
             ActionBar.NavigationMode = ActionBarNavigationMode.Tabs;
@@ -493,7 +494,7 @@ namespace WhoUnfollows
             var listView = FindViewById<ListView>(Resource.Id.listView1);
 
 
-            listView.Adapter = new ListeAdaptoru(this, tableItems, instaApi,listView);
+            listView.Adapter = new ListeAdaptoru(this, tableItems, instaApi,progress);
 
 
             var listView2 = FindViewById<ListView>(Resource.Id.listView2);

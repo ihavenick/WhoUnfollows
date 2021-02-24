@@ -16,15 +16,15 @@ namespace WhoUnfollows
         private readonly Activity context;
         private readonly IInstaApi gelen;
         private readonly List<TableItem> items;
-        private readonly ListView anaview;
+        private readonly ProgressDialog progress;
 
-
-        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView)
+        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ProgressDialog pd)
         {
             gelen = instaApi ?? throw new ArgumentNullException(nameof(instaApi));
             this.context = context;
             this.items = items;
-            this.anaview = anaView;
+
+            this.progress = pd;
 
         }
 
@@ -40,9 +40,7 @@ namespace WhoUnfollows
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             var item = items[position];
-            var view = convertView;
-            if (view == null) // no view to re-use, create new
-                view = context.LayoutInflater.Inflate(Resource.Layout.takipciler, null);
+            var view =  context.LayoutInflater.Inflate(Resource.Layout.takipciler, null);
             view.FindViewById<TextView>(Resource.Id.Text1).Text = item.kullaniciAdi;
             view.FindViewById<TextView>(Resource.Id.Text2).Text = item.AdiSoyadi;
             view.FindViewById<ImageView>(Resource.Id.Image).SetImageBitmap(item.Resim);
@@ -50,8 +48,9 @@ namespace WhoUnfollows
             view.FindViewById<ImageView>(Resource.Id.Image).Click += profilac;
 
             view.FindViewById<Button>(Resource.Id.Buttonn).Tag = item.userId;
-            view.FindViewById<Button>(Resource.Id.Buttonn).Click += deneme;
+            view.FindViewById<Button>(Resource.Id.Buttonn).Click +=  deneme;
             
+           
 
             return view;
         }
@@ -71,7 +70,7 @@ namespace WhoUnfollows
 
         private void deneme(object sender, EventArgs e)
         {
-            ProgressDialog progress = new ProgressDialog(context);
+           
             progress.SetTitle("Takipten cıkılıyor");
             progress.SetMessage("Lütfen bekleyin...");
             progress.SetCancelable(false); // disable dismiss by tapping outside of the dialog
@@ -85,11 +84,13 @@ namespace WhoUnfollows
             var cevap = Task.Run(async () => await gelen.UserProcessor.UnFollowUserAsync(kullaniciid)).Result;
             
             if (!cevap.Succeeded) return;
+
+            button.Click -= deneme;
             
             Toast.MakeText(context, "Takipten cıkılıyor", ToastLength.Short).Show();  
             
             items.Remove(items.SingleOrDefault(x => x.userId == kullaniciid));
-            anaview.InvalidateViews();
+            
             NotifyDataSetChanged();
             
             progress.Dismiss();

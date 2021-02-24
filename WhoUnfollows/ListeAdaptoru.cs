@@ -17,14 +17,16 @@ namespace WhoUnfollows
         private readonly IInstaApi gelen;
         private readonly List<TableItem> items;
         private readonly ListView anaview;
+        private readonly RelativeLayout YuklemeEkrani;
 
 
-        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView)
+        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView, RelativeLayout _yukleme)
         {
             gelen = instaApi ?? throw new ArgumentNullException(nameof(instaApi));
             this.context = context;
             this.items = items;
             this.anaview = anaView;
+            this.YuklemeEkrani = _yukleme;
         }
 
         public override TableItem this[int position] => items[position];
@@ -70,7 +72,10 @@ namespace WhoUnfollows
 
         private void deneme(object sender, EventArgs e)
         {
+            YuklemeEkrani.Visibility = ViewStates.Visible;
+            anaview.Visibility = ViewStates.Invisible;
             var button = sender as Button;
+            button.Text = "T. Çıkılıyor...";
             var kullaniciid = (long) button.Tag;
             var cevap = Task.Run(async () => await gelen.UserProcessor.UnFollowUserAsync(kullaniciid)).Result;
             
@@ -79,6 +84,8 @@ namespace WhoUnfollows
             items.Remove(items.SingleOrDefault(x => x.userId == kullaniciid));
             anaview.InvalidateViews();
             NotifyDataSetChanged();
+            YuklemeEkrani.Visibility = ViewStates.Invisible;
+            anaview.Visibility = ViewStates.Visible;
         }
     }
 }

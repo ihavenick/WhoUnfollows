@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Views;
@@ -71,9 +72,9 @@ namespace WhoUnfollows
             var button = sender as Button;
             var iteminidsi = (int) button.Tag;
             var item = items[iteminidsi];
-            var cevap = gelen.UserProcessor.UnFollowUserAsync(item.userId);
-            cevap.RunSynchronously();
-            if (cevap.Result.Succeeded)
+            var cevap = Task.Run(async () => await gelen.UserProcessor.UnFollowUserAsync(item.userId)).Result;
+
+            if (cevap.Succeeded)
             {
                 button.Text = "Çıkıldı";
                 button.Enabled = false;

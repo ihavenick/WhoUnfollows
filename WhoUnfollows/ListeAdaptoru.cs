@@ -17,16 +17,15 @@ namespace WhoUnfollows
         private readonly IInstaApi gelen;
         private readonly List<TableItem> items;
         private readonly ListView anaview;
-        private readonly RelativeLayout YuklemeEkrani;
 
 
-        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView, RelativeLayout _yukleme)
+        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView,)
         {
             gelen = instaApi ?? throw new ArgumentNullException(nameof(instaApi));
             this.context = context;
             this.items = items;
             this.anaview = anaView;
-            this.YuklemeEkrani = _yukleme;
+
         }
 
         public override TableItem this[int position] => items[position];
@@ -72,8 +71,14 @@ namespace WhoUnfollows
 
         private void deneme(object sender, EventArgs e)
         {
-            YuklemeEkrani.Visibility = ViewStates.Visible;
-            anaview.Visibility = ViewStates.Invisible;
+            ProgressDialog progress = new ProgressDialog(context);
+            progress.SetTitle("Takipten cıkılıyor");
+            progress.SetMessage("Lütfen bekleyin...");
+            progress.SetCancelable(false); // disable dismiss by tapping outside of the dialog
+            progress.Show();
+
+            
+          
             var button = sender as Button;
 
             var kullaniciid = (long) button.Tag;
@@ -81,11 +86,13 @@ namespace WhoUnfollows
             
             if (!cevap.Succeeded) return;
             
+            Toast.MakeText(context, "Takipten cıkılıyor", ToastLength.Short).Show();  
+            ProgressDialog.show(context, "Loading", "Wait while loading...");
             items.Remove(items.SingleOrDefault(x => x.userId == kullaniciid));
             anaview.InvalidateViews();
             NotifyDataSetChanged();
-            YuklemeEkrani.Visibility = ViewStates.Invisible;
-            anaview.Visibility = ViewStates.Visible;
+            
+            progress.Dismiss();
         }
     }
 }

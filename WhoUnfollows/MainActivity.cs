@@ -493,7 +493,7 @@ namespace WhoUnfollows
             var listView = FindViewById<ListView>(Resource.Id.listView1);
 
 
-            listView.Adapter = new ListeAdaptoru(this, tableItems, instaApi,listView,yukleme);
+            listView.Adapter = new ListeAdaptoru(this, tableItems, instaApi,listView);
 
 
             var listView2 = FindViewById<ListView>(Resource.Id.listView2);

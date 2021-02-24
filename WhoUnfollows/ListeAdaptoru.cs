@@ -19,7 +19,7 @@ namespace WhoUnfollows
         private readonly ListView anaview;
 
 
-        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView,)
+        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView)
         {
             gelen = instaApi ?? throw new ArgumentNullException(nameof(instaApi));
             this.context = context;

@@ -191,11 +191,28 @@ namespace WhoUnfollows
                     using (var fs = File.OpenRead(stateFile))
                     {
                         _instaApi2.LoadStateDataFromStream(fs);
-
-
-#pragma warning disable 4014
-                        if (_instaApi2.IsUserAuthenticated) girisYapti(button, _instaApi2);
-#pragma warning restore 4014
+                        if (_instaApi2.IsUserAuthenticated)
+                        {
+                            
+                        
+                        var result2 = Task.Run(async () => await _instaApi2.UserProcessor.GetUserFollowingAsync(
+                            _instaApi2.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5))).Result;
+                        var following = result2.Value;
+                        
+                        if (following.Count<=0)
+                        {
+                            
+                            Console.WriteLine($"Unable to get current user using current API instance: ");
+                            _instaApi2.LogoutAsync();
+                            File.Delete(stateFile);
+                            throw new InvalidOperationException("Oturum süreniz dolmuş");
+                        }
+                        else
+                        { 
+                             girisYapti(button, _instaApi2); 
+                        }
+                        
+                        }
                     }
                 }
             }

@@ -69,14 +69,16 @@ namespace WhoUnfollows
         private void deneme(object sender, EventArgs e)
         {
             var button = sender as Button;
-            // var userid = (long)button.Tag;
             var iteminidsi = (int) button.Tag;
             var item = items[iteminidsi];
-            gelen.UserProcessor.UnFollowUserAsync(item.userId);
-            //button.Visibility = Android.Views.ViewStates.Invisible;
-            button.Text = "Çıkıldı";
-            button.Enabled = false;
-            items.Remove(item);
+            var cevap = gelen.UserProcessor.UnFollowUserAsync(item.userId);
+            cevap.RunSynchronously();
+            if (cevap.Result.Succeeded)
+            {
+                button.Text = "Çıkıldı";
+                button.Enabled = false;
+            }
+            
         }
     }
 }

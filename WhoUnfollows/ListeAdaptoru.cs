@@ -16,15 +16,17 @@ namespace WhoUnfollows
         private readonly Activity context;
         private readonly IInstaApi gelen;
         private readonly List<TableItem> items;
-        private ListView anaview;
+        private readonly ListView anaview;
+        private readonly ApplicationDbContext db;
 
 
-        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView)
+        public ListeAdaptoru(Activity context, List<TableItem> items, IInstaApi instaApi,ListView anaView,ApplicationDbContext _db)
         {
             gelen = instaApi ?? throw new ArgumentNullException(nameof(instaApi));
             this.context = context;
             this.items = items;
             this.anaview = anaView;
+            this.db = _db;
         }
 
         public override TableItem this[int position] => items[position];
@@ -73,12 +75,12 @@ namespace WhoUnfollows
             var button = sender as Button;
             var kullaniciid = (long) button.Tag;
             var cevap = Task.Run(async () => await gelen.UserProcessor.UnFollowUserAsync(kullaniciid)).Result;
-
-            
             
             if (!cevap.Succeeded) return;
             
             items.Remove(items.SingleOrDefault(x => x.userId == kullaniciid));
+            db.TakipEtmeyenler.Remove(db.TakipEtmeyenler.SingleOrDefault(x=>x.Pk==kullaniciid)!);
+            Task.Run(async () => await db.SaveChangesAsync());
             anaview.InvalidateViews();
             NotifyDataSetChanged();
         }

@@ -75,7 +75,7 @@ namespace WhoUnfollows
             YuklemeEkrani.Visibility = ViewStates.Visible;
             anaview.Visibility = ViewStates.Invisible;
             var button = sender as Button;
-            button.Text = "T. Çıkılıyor...";
+
             var kullaniciid = (long) button.Tag;
             var cevap = Task.Run(async () => await gelen.UserProcessor.UnFollowUserAsync(kullaniciid)).Result;
             

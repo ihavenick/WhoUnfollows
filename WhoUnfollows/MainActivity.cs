@@ -427,12 +427,12 @@ namespace WhoUnfollows
                     yukleme.Visibility = ViewStates.Visible;
 
                     var result = await instaApi.UserProcessor.GetUserFollowersAsync(
-                        instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(10));
+                        instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(1));
                     var followers = result.Value;
 
 
                     var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
-                        instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(10));
+                        instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(1));
                     var following = result2.Value;
 
                     if (following== null||followers==null)
@@ -547,11 +547,11 @@ namespace WhoUnfollows
                 var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
 
                 var result = await instaApi.UserProcessor.GetUserFollowersAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(10));
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(1));
                 var followers = result.Value;
 
                 var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(10));
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(1));
                 var following = result2.Value;
                 
                 if(followers==null||following==null)

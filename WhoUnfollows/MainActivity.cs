@@ -453,6 +453,9 @@ namespace WhoUnfollows
                         instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
                     var following = result2.Value;
 
+                    if (following== null||followers==null)
+                    refresh_clickAsync(button, new EventArgs());
+
 
                     var takipetmeyenler = following.Except(followers).ToList();
                     var hayranlar = followers.Except(following).ToList();
@@ -509,7 +512,15 @@ namespace WhoUnfollows
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
+                if (ex.Message != "The remote server returned an error: (410) Gone.")
+                {
+                    var dlgAlert = new AlertDialog.Builder(this);
+                    dlgAlert.SetTitle("hata");
+                    dlgAlert.SetMessage(ex.ToString());
+
+                    dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
+                    dlgAlert.Show();
+                }
             }
 
 

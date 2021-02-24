@@ -266,6 +266,15 @@
             android:textSize="15dp"
             android:layout_marginLeft="147.0dp" 
             android:layout_marginTop="2.5dp"/>
+        <ImageView
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:id="@+id/sukulitlogo"
+                android:src="@mipmap/sukulitlogo"
+                android:layout_below="@id/ata"
+                android:layout_marginLeft="100.0dp"
+                android:layout_marginBottom="31.0dp"
+        />
 
 
     </RelativeLayout>

@@ -196,10 +196,10 @@ namespace WhoUnfollows
                             
                         
                         var result2 = Task.Run(async () => await _instaApi2.UserProcessor.GetUserFollowingAsync(
-                            _instaApi2.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5))).Result;
+                            _instaApi2.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(1))).Result;
                         var following = result2.Value;
                         
-                        if (following.Count<=0)
+                        if (following==null)
                         {
                             
                             Console.WriteLine($"Unable to get current user using current API instance: ");
@@ -575,6 +575,9 @@ namespace WhoUnfollows
                 var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
                     instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(5));
                 var following = result2.Value;
+                
+                if(followers==null||following==null)
+                     logoutAsync(sender,e);
 
                 var takipetmeyenler = following.Except(followers).ToList();
                 var hayranlar = followers.Except(following).ToList();

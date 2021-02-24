@@ -527,13 +527,14 @@ namespace WhoUnfollows
             var listView = FindViewById<ListView>(Resource.Id.listView1);
 
 
-            listView.Adapter = new ListeAdaptoru(this, tableItems, instaApi);
+            listView.Adapter = new ListeAdaptoru(this, tableItems, instaApi,listView);
 
 
             var listView2 = FindViewById<ListView>(Resource.Id.listView2);
 
 
             listView2.Adapter = new ListeAdaptoru2(this, hayranItem, instaApi);
+            
             rAnaSayfa.Visibility = ViewStates.Visible;
 
             yukleme.Visibility = ViewStates.Invisible;

@@ -248,7 +248,8 @@ namespace WhoUnfollows
             ActionBar.Show();
 
             var adview = FindViewById<AdView>(Resource.Id.adView);
-            adview.AdUnitId = "ca-app-pub-9927527797473679/5706022590";
+            
+            //adview.AdUnitId = "ca-app-pub-9927527797473679/5706022590";
 
             var adRequest = new AdRequest.Builder().Build();
             adview.LoadAd(adRequest);

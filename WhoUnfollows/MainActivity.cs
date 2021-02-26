@@ -6,34 +6,32 @@ using System.Net;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.Gestures;
+using Android.Content.PM;
 using Android.Gms.Ads;
 using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Google.Android.Material.Tabs.AppCompat.App;
 using InstagramApiSharp;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Logger;
 using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using SQLitePCL;
 using Xamarin.Essentials;
-using Debug = System.Diagnostics.Debug;
 using Environment = System.Environment;
 using Path = System.IO.Path;
+using Permission = Plugin.Permissions.Abstractions.Permission;
 using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
-
+using Uri = Android.Net.Uri;
 
 namespace WhoUnfollows
 {
-    [Activity(Label = "WhoUnfollows", MainLauncher = true, WindowSoftInputMode = SoftInput.AdjustResize, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,
+    [Activity(Label = "WhoUnfollows", MainLauncher = true, WindowSoftInputMode = SoftInput.AdjustResize,
+        ScreenOrientation = ScreenOrientation.Portrait,
         Icon = "@mipmap/icon")]
-    public class MainActivity : Activity,
-        GestureDetector.IOnGestureListener, View.IOnTouchListener
+    public class MainActivity : Activity
     {
         private static readonly string dosyayolu = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         private readonly List<TableItem> hayranItem = new List<TableItem>();
@@ -42,91 +40,16 @@ namespace WhoUnfollows
 
         private IInstaApi _instaApi;
         private IInstaApi _instaApi2;
-        
+        private int imageIndex = 0;
+        private RelativeLayout rAnaSayfa;
+        private RelativeLayout rHakkinda;
+        private RelativeLayout rHayran;
+        private RelativeLayout rTakipci;
+
         private EditText txtEmail;
         private EditText txtPassword;
         private UserSessionData userSession;
-        private GestureDetector gestureDetector;  
         private ProgressBar yuklemeBar;
-        private RelativeLayout rAnaSayfa;
-        private RelativeLayout rTakipci;
-        private RelativeLayout rHayran;
-        private RelativeLayout rHakkinda;
-        private int imageIndex = 0;
-
-        private readonly int SWIPE_MIN_DISTANCE = 120;  
-        private static int SWIPE_MAX_OFF_PATH = 250;  
-        private static int SWIPE_THRESHOLD_VELOCITY = 200;  
-
-
-       
-
-         
-        public bool OnDown(MotionEvent e) {  
-            Toast.MakeText(this, "On Down", ToastLength.Short).Show();  
-            return true;  
-        }  
-
-        public bool OnFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {  
-            bool result = false;  
-            try {  
-                float diffY = e2.GetY() - e1.GetY();  
-                float diffX = e2.GetX() - e1.GetX();  
-                if (Math.Abs(diffX) > Math.Abs(diffY)) {  
-                    if (Math.Abs(diffX) > SWIPE_THRESHOLD_VELOCITY && Math.Abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {  
-                        if (diffX > 0) {  
-                            //onSwipeRight();    
-                            if (imageIndex > 0) {  
-                                imageIndex--;  
-                            }  
-                            //txtGestureView.Text = "Swiped Right";  
-                            rAnaSayfa.Visibility = ViewStates.Invisible;
-                            rTakipci.Visibility = ViewStates.Visible;
-                            Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
-                            rHayran.Visibility = ViewStates.Invisible;
-                            rHakkinda.Visibility = ViewStates.Invisible;
-                        } else {  
-                            if (imageIndex < 28) {  
-                                imageIndex++;  
-                            }  
-                            //onSwipeLeft();    
-                            //txtGestureView.Text = "Swiped Left";  Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
-                            Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
-                        }  
-                        result = true;  
-                    }  
-                } else  
-                if (Math.Abs(diffY) > SWIPE_THRESHOLD_VELOCITY && Math.Abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {  
-                    if (diffY > 0) {  
-                        //onSwipeBottom();    
-                        //txtGestureView.Text = "Swiped Bottom";  Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
-                        Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
-                    } else {  
-                        //onSwipeTop();    
-                       // txtGestureView.Text = "Swiped Top";  Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
-                       Toast.MakeText(this, "On Touch", ToastLength.Short).Show();  
-                    }  
-                    result = true;  
-                }  
-            } catch (Exception exception) {  
-                Console.WriteLine(exception.Message);  
-            }  
-            return result;  
-        }  
-        public void OnLongPress(MotionEvent e) {  
-            Toast.MakeText(this, "On Long Press", ToastLength.Short).Show();  
-        }  
-        public bool OnScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {  
-            Toast.MakeText(this, "On Scroll", ToastLength.Short).Show();  
-            return true;  
-        }  
-        public void OnShowPress(MotionEvent e) {  
-            Toast.MakeText(this, "On Show Press", ToastLength.Short).Show();  
-        }  
-        public bool OnSingleTapUp(MotionEvent e) {  
-            Toast.MakeText(this, "On Single Tab Up", ToastLength.Short).Show();  
-            return true;  
-        }  
 
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -143,8 +66,6 @@ namespace WhoUnfollows
             Platform.Init(this, savedInstanceState);
             Batteries.Init();
 
-
-            gestureDetector = new GestureDetector(this,this);
             var button = FindViewById<ImageButton>(Resource.Id.myButton);
 
             yuklemeBar = FindViewById<ProgressBar>(Resource.Id.progressBar1);
@@ -154,7 +75,7 @@ namespace WhoUnfollows
 
             CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
 
-            MobileAds.Initialize(this);
+            MobileAds.Initialize(this, "ca-app-pub-9927527797473679~9358311233");
 
             userSession = new UserSessionData
             {
@@ -171,17 +92,18 @@ namespace WhoUnfollows
 
             try
             {
-
                 var status = CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
-                
+
                 if (status.Result != PermissionStatus.Granted)
                 {
-                    if ( CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage).Result)
-                        
-                        Toast.MakeText(Application.Context, "Dosya saklama izni vermen gerekiyo", ToastLength.Long).Show();
+                    if (CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage).Result)
 
-                    status =  CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
+                        Toast.MakeText(Application.Context, "Dosya saklama izni vermen gerekiyo", ToastLength.Long)
+                            .Show();
+
+                    status = CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
                 }
+
                 // load session file if exists
                 if (File.Exists(stateFile))
                 {
@@ -191,25 +113,20 @@ namespace WhoUnfollows
                         _instaApi2.LoadStateDataFromStream(fs);
                         if (_instaApi2.IsUserAuthenticated)
                         {
-                            
-                        
-                        var result2 = Task.Run(async () => await _instaApi2.UserProcessor.GetUserFollowingAsync(
-                            _instaApi2.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(1))).Result;
-                        var following = result2.Value;
-                        
-                        if (following==null)
-                        {
-                            
-                            Console.WriteLine($"Unable to get current user using current API instance: ");
-                            _instaApi2.LogoutAsync();
-                            File.Delete(stateFile);
-                            throw new InvalidOperationException("Oturum süreniz dolmuş");
-                        }
-                        else
-                        { 
-                             girisYapti(button, _instaApi2); 
-                        }
-                        
+                            var result2 = Task.Run(async () => await _instaApi2.UserProcessor.GetUserFollowingAsync(
+                                _instaApi2.GetLoggedUser().LoggedInUser.UserName,
+                                PaginationParameters.MaxPagesToLoad(1))).Result;
+                            var following = result2.Value;
+
+                            if (following == null)
+                            {
+                                Console.WriteLine("Unable to get current user using current API instance: ");
+                                _instaApi2.LogoutAsync();
+                                File.Delete(stateFile);
+                                throw new InvalidOperationException("Oturum süreniz dolmuş");
+                            }
+
+                            girisYapti(button, _instaApi2);
                         }
                     }
                 }
@@ -276,9 +193,7 @@ namespace WhoUnfollows
                 dlgAlert.Show();
                 yuklemeBar.Visibility = ViewStates.Invisible;
                 return;
-                
             }
-
 
 
             userSession = new UserSessionData
@@ -326,24 +241,24 @@ namespace WhoUnfollows
         private async Task girisYapti(ImageButton button, IInstaApi instaApi)
         {
             SetContentView(Resource.Layout.Menu);
-            ProgressDialog progress = new ProgressDialog(this);
+            var progress = new ProgressDialog(this);
 
 
             ActionBar.NavigationMode = ActionBarNavigationMode.Tabs;
             ActionBar.Show();
 
             var adview = FindViewById<AdView>(Resource.Id.adView);
+            adview.AdUnitId = "ca-app-pub-9927527797473679/5706022590";
 
-            //Test device request.
-            //var adRequest = new AdRequest.Builder().AddTestDevice("33BE2250B43518CCDA7DE426D04EE231").Build();
-            //adview.LoadAd(adRequest);
-            
-            rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa); 
+            var adRequest = new AdRequest.Builder().Build();
+            adview.LoadAd(adRequest);
+
+            rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
             rTakipci = FindViewById<RelativeLayout>(Resource.Id.takipcilerSayfasi);
             rHayran = FindViewById<RelativeLayout>(Resource.Id.hayranlarSayfasi);
             rHakkinda = FindViewById<RelativeLayout>(Resource.Id.hakkindaSayfasi);
             var yukleme = FindViewById<RelativeLayout>(Resource.Id.Yukleme);
-            
+
 
             var ata = FindViewById<TextView>(Resource.Id.ata);
             var ramazan = FindViewById<TextView>(Resource.Id.ramazan);
@@ -414,64 +329,64 @@ namespace WhoUnfollows
 
             var imageView = FindViewById<ImageView>(Resource.Id.imageView1);
             imageView.SetImageBitmap(GetBitmapFromUrl(url));
-            
+
             try
             {
                 var takipcii = FindViewById<TextView>(Resource.Id.textView1);
                 var takipciler = FindViewById<TextView>(Resource.Id.takipciler);
                 var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
                 var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
-                
-  
-                    rAnaSayfa.Visibility = ViewStates.Invisible;
-
-                    
-                    yukleme.Visibility = ViewStates.Visible;
-
-                    var result = await instaApi.UserProcessor.GetUserFollowersAsync(
-                        instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
-                    var followers = result.Value;
 
 
-                    var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
-                        instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
-                    var following = result2.Value;
+                rAnaSayfa.Visibility = ViewStates.Invisible;
 
-                    if (following== null||followers==null)
+
+                yukleme.Visibility = ViewStates.Visible;
+
+                var result = await instaApi.UserProcessor.GetUserFollowersAsync(
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
+                var followers = result.Value;
+
+
+                var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
+                var following = result2.Value;
+
+                if (following == null || followers == null)
                     refresh_clickAsync(button, new EventArgs());
 
 
-                    var takipetmeyenler = following.Except(followers).ToList();
-                    var hayranlar = followers.Except(following).ToList();
+                var takipetmeyenler = following.Except(followers).ToList();
+                var hayranlar = followers.Except(following).ToList();
 
-                    takipcii.Text = Resources.GetText(Resource.String.textView11) + takipetmeyenler.Count;
-                    takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + followers.Count;
-                    takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + following.Count;
-
-
-                    foreach (var item in takipetmeyenler) 
-                        tableItems.Add(new TableItem
-                        {
-                            kullaniciAdi = item.UserName,
-                            AdiSoyadi = item.FullName,
-                            Resim = GetBitmapFromUrl(item.ProfilePicUrl),
-                            userId = item.Pk
-                        });
-
-                    foreach (var item in hayranlar)
-                        hayranItem.Add(new TableItem
-                        {
-                            kullaniciAdi = item.UserName,
-                            AdiSoyadi = item.FullName,
-                            Resim = GetBitmapFromUrl(item.ProfilePicUrl),
-                            userId = item.Pk
-                        });
+                takipcii.Text = Resources.GetText(Resource.String.textView11) + takipetmeyenler.Count;
+                takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + followers.Count;
+                takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + following.Count;
 
 
-                    rAnaSayfa.Visibility = ViewStates.Visible;
+                foreach (var item in takipetmeyenler)
+                    tableItems.Add(new TableItem
+                    {
+                        kullaniciAdi = item.UserName,
+                        AdiSoyadi = item.FullName,
+                        Resim = GetBitmapFromUrl(item.ProfilePicUrl),
+                        userId = item.Pk
+                    });
 
-                    yukleme.Visibility = ViewStates.Invisible;
-                
+                foreach (var item in hayranlar)
+                    hayranItem.Add(new TableItem
+                    {
+                        kullaniciAdi = item.UserName,
+                        AdiSoyadi = item.FullName,
+                        Resim = GetBitmapFromUrl(item.ProfilePicUrl),
+                        userId = item.Pk
+                    });
+
+
+                rAnaSayfa.Visibility = ViewStates.Visible;
+
+                yukleme.Visibility = ViewStates.Invisible;
+
 
                 kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
                 rAnaSayfa.Visibility = ViewStates.Visible;
@@ -495,31 +410,31 @@ namespace WhoUnfollows
             var listView = FindViewById<ListView>(Resource.Id.listView1);
 
 
-            listView.Adapter = new ListeAdaptoru(this, tableItems, instaApi,progress);
+            listView.Adapter = new ListeAdaptoru(this, tableItems, instaApi, progress);
 
 
             var listView2 = FindViewById<ListView>(Resource.Id.listView2);
 
 
             listView2.Adapter = new ListeAdaptoru2(this, hayranItem, instaApi);
-            
+
             rAnaSayfa.Visibility = ViewStates.Visible;
 
             yukleme.Visibility = ViewStates.Invisible;
         }
 
-         void Ramazan_Click(object sender, EventArgs e)
+        private void Ramazan_Click(object sender, EventArgs e)
         {
-            var uri = Android.Net.Uri.Parse("http://instagram.com/ramazankabadayi");
+            var uri = Uri.Parse("http://instagram.com/ramazankabadayi");
             var intent = new Intent(Intent.ActionView, uri);
-            this.StartActivity(intent);
+            StartActivity(intent);
         }
 
         private void Ata_Click(object sender, EventArgs e)
         {
-            var uri = Android.Net.Uri.Parse("http://instagram.com/atacetin_");
+            var uri = Uri.Parse("http://instagram.com/atacetin_");
             var intent = new Intent(Intent.ActionView, uri);
-            this.StartActivity(intent);
+            StartActivity(intent);
         }
 
         private async void refresh_clickAsync(object sender, EventArgs e)
@@ -555,13 +470,13 @@ namespace WhoUnfollows
                 var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
                     instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
                 var following = result2.Value;
-                
-                if(followers==null||following==null)
-                     logoutAsync(sender,e);
+
+                if (followers == null || following == null)
+                    logoutAsync(sender, e);
 
                 var takipetmeyenler = following.Except(followers).ToList();
                 var hayranlar = followers.Except(following).ToList();
-                
+
 
                 takipci.Text = "Takip Etmeyen: " + takipetmeyenler.Count;
                 takipciler.Text = "Takipçi: " + followers.Count;
@@ -569,7 +484,6 @@ namespace WhoUnfollows
                 kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
 
                 foreach (var item in takipetmeyenler)
-                {
                     tableItems.Add(new TableItem
                     {
                         kullaniciAdi = item.UserName,
@@ -577,7 +491,6 @@ namespace WhoUnfollows
                         Resim = GetBitmapFromUrl(item.ProfilePicUrl),
                         userId = item.Pk
                     });
-                }
 
                 foreach (var item in hayranlar)
                     hayranItem.Add(new TableItem

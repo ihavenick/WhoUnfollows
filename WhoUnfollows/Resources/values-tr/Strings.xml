@@ -6,7 +6,7 @@
   <string name="takipetmeyenler">Takip etmeyenler</string>
   <string name="hakkinda">Hakkinda</string>
   <string name="hayranlar">Hayranlar</string>
-  <string name="takipcilerr">Takipçi: </string>
-  <string name="takipedilenlerr">Takip: </string>
+  <string name="takipcilerr">Takipçi: \n</string>
+  <string name="takipedilenlerr">Takip: \n</string>
   <string name="uygulamaa">Geliştiriciler</string>
 </resources>

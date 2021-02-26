@@ -8,7 +8,7 @@
     <string name="hayranlar">Fans</string>
     <string name="hakkinda">About</string>
     <string name="takipetmeyenler">UnFollowers</string>
-    <string name="takipcilerr">Followers: </string>
-    <string name="takipedilenlerr">Following: </string>
+    <string name="takipcilerr">Followers: \n</string>
+    <string name="takipedilenlerr">Following: \n</string>
     <string name="uygulamaa">Developers</string>
 </resources>

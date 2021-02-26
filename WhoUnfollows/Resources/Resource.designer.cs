@@ -10246,6 +10246,15 @@ namespace WhoUnfollows
 			// aapt resource value: 0x7F0C0006
 			public const int sukulitlogo = 2131492870;
 			
+			// aapt resource value: 0x7F0C0007
+			public const int sukulitlogo2 = 2131492871;
+			
+			// aapt resource value: 0x7F0C0008
+			public const int sukulitlogo3 = 2131492872;
+			
+			// aapt resource value: 0x7F0C0009
+			public const int sukulitlogo4 = 2131492873;
+			
 			static Mipmap()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

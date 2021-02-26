@@ -263,6 +263,8 @@ namespace WhoUnfollows
 
             var ata = FindViewById<TextView>(Resource.Id.ata);
             var ramazan = FindViewById<TextView>(Resource.Id.ramazan);
+            var sukulit = FindViewById<ImageView>(Resource.Id.sukulitlogo);
+            sukulit.Click += SukulitLogo;
 
             ata.Click += Ata_Click;
             ramazan.Click += Ramazan_Click;
@@ -422,6 +424,13 @@ namespace WhoUnfollows
             rAnaSayfa.Visibility = ViewStates.Visible;
 
             yukleme.Visibility = ViewStates.Invisible;
+        }
+
+        private void SukulitLogo(object sender, EventArgs e)
+        {
+            var uri = Uri.Parse("https://sukulit-apps.github.io/");
+            var intent = new Intent(Intent.ActionView, uri);
+            StartActivity(intent);
         }
 
         private void Ramazan_Click(object sender, EventArgs e)

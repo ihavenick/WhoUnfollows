@@ -10428,25 +10428,28 @@ namespace WhoUnfollows
 			public const int status_bar_notification_info_overflow = 2131558457;
 			
 			// aapt resource value: 0x7F0D003A
-			public const int takipcilerr = 2131558458;
+			public const int takipcik = 2131558458;
 			
 			// aapt resource value: 0x7F0D003B
-			public const int takipedilenlerr = 2131558459;
+			public const int takipcilerr = 2131558459;
 			
 			// aapt resource value: 0x7F0D003C
-			public const int takipetmeyenler = 2131558460;
+			public const int takipedilenlerr = 2131558460;
 			
 			// aapt resource value: 0x7F0D003D
-			public const int tbEmaill = 2131558461;
+			public const int takipetmeyenler = 2131558461;
 			
 			// aapt resource value: 0x7F0D003E
-			public const int tbPasswordd = 2131558462;
+			public const int tbEmaill = 2131558462;
 			
 			// aapt resource value: 0x7F0D003F
-			public const int textView11 = 2131558463;
+			public const int tbPasswordd = 2131558463;
 			
 			// aapt resource value: 0x7F0D0040
-			public const int uygulamaa = 2131558464;
+			public const int textView11 = 2131558464;
+			
+			// aapt resource value: 0x7F0D0041
+			public const int uygulamaa = 2131558465;
 			
 			static String()
 			{

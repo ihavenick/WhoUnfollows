@@ -11,4 +11,5 @@
     <string name="takipcilerr">Followers: \n</string>
     <string name="takipedilenlerr">Following: \n</string>
     <string name="uygulamaa">Developers</string>
+    <string name="takipcik">Unfollow</string>
 </resources>

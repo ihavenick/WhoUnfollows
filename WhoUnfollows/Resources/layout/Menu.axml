@@ -47,7 +47,7 @@
             android:id="@+id/imageView1"
             android:background="#ff090000"
             android:layout_marginTop="100.0dp"
-            android:layout_marginBottom="120.0dp"
+            android:layout_marginBottom="12.0dp"
             android:layout_centerVertical="false"
             android:layout_centerHorizontal="true"
         
@@ -59,6 +59,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/imageView1"
             android:layout_centerVertical="true"
             android:layout_marginBottom="30dp"
             android:layout_centerHorizontal="true"
@@ -238,33 +239,30 @@
         <TextView
             android:text="@ramazankabadayi"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_width="250.0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentRight="false"
+            
             android:layout_marginRight="121.5dp"
             android:layout_below="@id/uygulama"
             android:id="@+id/ramazan"
             android:textColor="#4a1d10"
             android:textSize="15dp"
-            android:layout_marginLeft="131.6dp"
-            android:layout_marginBottom="4.6dp"
-            android:layout_marginTop="17.5dp" />
+            />
         <TextView
             android:text="@atacetin_"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_width="250.5dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="103.0dp"
+           
+            
             android:layout_below="@id/ramazan"
             android:id="@+id/ata"
             android:textColor="#4a1d10"
             android:textSize="15dp"
-            android:layout_marginLeft="147.0dp" 
             android:layout_marginTop="2.5dp"/>
         <ImageView
                 android:layout_width="200dp"

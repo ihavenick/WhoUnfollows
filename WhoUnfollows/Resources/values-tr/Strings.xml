@@ -4,9 +4,10 @@
   <string name="tbPasswordd">Parola</string>
   <string name="textView11">Takip Etmeyenler: \n </string>
   <string name="takipetmeyenler">Takip etmeyenler</string>
-  <string name="hakkinda">Hakkinda</string>
+  <string name="hakkinda">Hakkında</string>
   <string name="hayranlar">Hayranlar</string>
   <string name="takipcilerr">Takipçi: \n</string>
   <string name="takipedilenlerr">Takip: \n</string>
   <string name="uygulamaa">Geliştiriciler</string>
+  <string name="takipcik">Çık</string>
 </resources>

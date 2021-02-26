@@ -263,7 +263,7 @@ namespace WhoUnfollows
 
             var ata = FindViewById<TextView>(Resource.Id.ata);
             var ramazan = FindViewById<TextView>(Resource.Id.ramazan);
-            var sukulit = FindViewById<TextView>(Resource.Id.sukulitlogo);
+            var sukulit = FindViewById<ImageView>(Resource.Id.sukulitlogo);
             sukulit.Click += SukulitLogo;
 
             ata.Click += Ata_Click;

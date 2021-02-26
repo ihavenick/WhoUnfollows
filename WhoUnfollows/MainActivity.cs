@@ -98,7 +98,7 @@ namespace WhoUnfollows
                 {
                     if (CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage).Result)
 
-                        Toast.MakeText(Application.Context, "Dosya saklama izni vermen gerekiyo", ToastLength.Long)
+                        Toast.MakeText(Application.Context, Resources.GetText(Resource.String.fileperrmisson), ToastLength.Long)
                             .Show();
 
                     status = CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
@@ -107,7 +107,6 @@ namespace WhoUnfollows
                 // load session file if exists
                 if (File.Exists(stateFile))
                 {
-                    Console.WriteLine("Loading state from file");
                     using (var fs = File.OpenRead(stateFile))
                     {
                         _instaApi2.LoadStateDataFromStream(fs);
@@ -120,7 +119,6 @@ namespace WhoUnfollows
 
                             if (following == null)
                             {
-                                Console.WriteLine("Unable to get current user using current API instance: ");
                                 _instaApi2.LogoutAsync();
                                 File.Delete(stateFile);
                                 throw new InvalidOperationException("Oturum süreniz dolmuş");
@@ -133,12 +131,7 @@ namespace WhoUnfollows
             }
             catch (Exception er)
             {
-                var dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.SetTitle("hata");
-                dlgAlert.SetMessage(er.Message);
-
-                dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
-                dlgAlert.Show();
+                HataGoster(er.Message);
             }
 
 
@@ -162,7 +155,7 @@ namespace WhoUnfollows
 
             StartActivity(activity);
 
-            Toast.MakeText(Application.Context, "Çıkış Yapıldı!", ToastLength.Short).Show();
+            Toast.MakeText(Application.Context, Resources.GetText(Resource.String.logout), ToastLength.Short).Show();
         }
 
         private async void butonTiklandiAsync(object sender, EventArgs e)
@@ -174,35 +167,27 @@ namespace WhoUnfollows
             if (status != PermissionStatus.Granted)
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
-                    //button.Text = "Dosya saklama izni vermen gerekiyo";
-                    Toast.MakeText(Application.Context, "Dosya saklama izni vermen gerekiyo", ToastLength.Long).Show();
+                    
+                    Toast.MakeText(Application.Context, Resources.GetText(Resource.String.fileperrmisson), ToastLength.Long).Show();
 
                 status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
             }
-
-
+            
             yuklemeBar.Visibility = ViewStates.Visible;
 
             if (txtEmail.Text.Length <= 0 || txtPassword.Text.Length <= 0)
             {
-                var dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.SetTitle("hata");
-                dlgAlert.SetMessage("Şifre ve kullanıcı adını boş bırakma");
-
-                dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
-                dlgAlert.Show();
+                HataGoster(Resources.GetText(Resource.String.passwordempty));
                 yuklemeBar.Visibility = ViewStates.Invisible;
                 return;
             }
-
-
+            
             userSession = new UserSessionData
             {
                 UserName = txtEmail.Text,
                 Password = txtPassword.Text
             };
-
-
+            
             _instaApi = InstaApiBuilder.CreateBuilder()
                 .SetUser(userSession)
                 .UseLogger(new DebugLogger(LogLevel.Exceptions))
@@ -211,23 +196,14 @@ namespace WhoUnfollows
 
             if (!_instaApi.IsUserAuthenticated)
             {
-                Console.WriteLine($"Logging in as {userSession.UserName}");
                 var logInResult = await _instaApi.LoginAsync();
                 if (!logInResult.Succeeded)
                 {
-                    Console.WriteLine($"Unable to login: {logInResult.Info.Message}");
-                    //button.Text = logInResult.Info.Message;
                     Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long).Show();
-                    var dlgAlert = new AlertDialog.Builder(this);
-                    dlgAlert.SetTitle(logInResult.Info.Message);
-                    dlgAlert.SetMessage(logInResult.Info.Message);
-
-                    dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
-                    dlgAlert.Show();
+                    HataGoster(logInResult.Info.Message);
                     yuklemeBar.Visibility = ViewStates.Invisible;
                     return;
                 }
-
                 await girisYapti(button, _instaApi);
                 var state = _instaApi.GetStateDataAsStream();
                 using (var fileStream = File.Create(stateFile))
@@ -236,6 +212,16 @@ namespace WhoUnfollows
                     state.CopyTo(fileStream);
                 }
             }
+        }
+
+        private void HataGoster(string govde)
+        {
+            var dlgAlert = new AlertDialog.Builder(this);
+            dlgAlert.SetTitle(Resources.GetText(Resource.String.error));
+            dlgAlert.SetMessage(govde);
+
+            dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
+            dlgAlert.Show();
         }
 
         private async Task girisYapti(Button button, IInstaApi instaApi)
@@ -400,15 +386,9 @@ namespace WhoUnfollows
             {
                 if (ex.Message != "The remote server returned an error: (410) Gone.")
                 {
-                    var dlgAlert = new AlertDialog.Builder(this);
-                    dlgAlert.SetTitle("hata");
-                    dlgAlert.SetMessage(ex.ToString());
-
-                    dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
-                    dlgAlert.Show();
+                    HataGoster(ex.ToString());
                 }
             }
-
 
             var listView = FindViewById<ListView>(Resource.Id.listView1);
 
@@ -488,9 +468,9 @@ namespace WhoUnfollows
                 var hayranlar = followers.Except(following).ToList();
 
 
-                takipci.Text = "Takip Etmeyen: " + takipetmeyenler.Count;
-                takipciler.Text = "Takipçi: " + followers.Count;
-                takipedilenler.Text = "Takip: " + following.Count;
+                takipci.Text = Resources.GetText(Resource.String.textView11) + takipetmeyenler.Count;
+                takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + followers.Count;
+                takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + following.Count;
                 kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
 
                 foreach (var item in takipetmeyenler)
@@ -525,19 +505,11 @@ namespace WhoUnfollows
                 }
                 else
                 {
-                    var dlgAlert = new AlertDialog.Builder(this);
-                    dlgAlert.SetTitle("hata");
-                    dlgAlert.SetMessage(exception.Message);
-
-                    dlgAlert.SetPositiveButton("OK", delegate
-                    {
-                        dlgAlert.Dispose();
-
-                        yukleme.Visibility = ViewStates.Invisible;
-                        anaekran.Visibility = ViewStates.Visible;
-                        ActionBar.Show();
-                    });
-                    dlgAlert.Show();
+                    HataGoster(exception.Message);
+                    yukleme.Visibility = ViewStates.Invisible;
+                    anaekran.Visibility = ViewStates.Visible;
+                    ActionBar.Show();
+                    
                 }
             }
         }
@@ -552,11 +524,6 @@ namespace WhoUnfollows
             }
 
             return null;
-        }
-
-        public bool OnTouch(View? v, MotionEvent? e)
-        {
-            return true;
         }
     }
 }

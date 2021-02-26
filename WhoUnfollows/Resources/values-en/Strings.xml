@@ -10,6 +10,10 @@
   <string name="hayranlar">Fans</string>
   <string name="takipetmeyenler">UnFollowers</string>
   <string name="uygulamaa">Developers</string>
+  <string name="passwordempty">Username or Password cannot be empty</string>
+  <string name="logout">Logged out!</string>
+  <string name="fileperrmisson">App needs file permisson to run</string>
+  <string name="error">Error</string>
   <string name="takipcik">Unfollow</string>
   <string name="loginbtn">Login</string>
 </resources>

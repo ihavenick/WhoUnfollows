@@ -8,8 +8,12 @@
   <string name="hayranlar">Hayranlar</string>
   <string name="takipcilerr">Takipçi: \n</string>
   <string name="takipedilenlerr">Takip: \n</string>
-  <string name="pleasewait">Lütfen bekleyin.\n Biraz zaman alabilir.</string>
+  <string name="pleasewait"> Lütfen bekleyin\n Biraz zaman alabilir.</string>
   <string name="uygulamaa">Geliştiriciler</string>
+  <string name="error">Hata</string>
+  <string name="logout">Oturum Kapatıldı!</string>
+  <string name="passwordempty">Kullanıcı adı veya Şifre boş olamaz</string>
+  <string name="fileperrmisson">Uygulama çalışmak için dosya erişim izni gerektiriyor</string>
   <string name="takipcik">Çık</string>
   <string name="loginbtn">Oturum aç</string>
 </resources>

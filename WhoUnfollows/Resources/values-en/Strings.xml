@@ -6,6 +6,7 @@
   <string name="takipcilerr">Followers: \n</string>
   <string name="takipedilenlerr">Following: \n</string>
   <string name="hakkinda">About</string>
+  <string name="pleasewait">Please wait\n This can took a while</string>
   <string name="hayranlar">Fans</string>
   <string name="takipetmeyenler">UnFollowers</string>
   <string name="uygulamaa">Developers</string>

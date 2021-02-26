@@ -26,6 +26,17 @@
             android:layout_centerHorizontal="true"
             android:visibility="visible"
     />
+        <TextView
+            android:text="@string/pleasewait"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progressBar2"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/pleaseWait"
+            android:textColor="#4a1d10"/>
 
 
 
@@ -201,7 +212,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+            ads:adUnitId="ca-app-pub-9927527797473679/5706022590">
         </com.google.android.gms.ads.AdView>
     </RelativeLayout>
 

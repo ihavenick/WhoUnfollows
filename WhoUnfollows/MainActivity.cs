@@ -266,7 +266,7 @@ namespace WhoUnfollows
 
             yuklemeBar.Visibility = ViewStates.Visible;
 
-            if (txtEmail.Text == null && txtPassword.Text == null)
+            if (txtEmail.Text.Length <= 0 || txtPassword.Text.Length <= 0)
             {
                 var dlgAlert = new AlertDialog.Builder(this);
                 dlgAlert.SetTitle("hata");
@@ -274,6 +274,7 @@ namespace WhoUnfollows
 
                 dlgAlert.SetPositiveButton("OK", delegate { dlgAlert.Dispose(); });
                 dlgAlert.Show();
+                yuklemeBar.Visibility = ViewStates.Invisible;
                 return;
                 
             }

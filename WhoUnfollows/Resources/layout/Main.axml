@@ -19,7 +19,7 @@
 		android:id="@+id/tbEmail"
 		android:layout_marginLeft="160.0dp"
 		android:textColorHint="#4a1d10"
-		android:hint="Username"
+		android:hint="@string/tbEmaill"
 		android:textSize="22dp"
 		android:textColor="#4a1d10" />
 	<ImageView
@@ -45,7 +45,7 @@
 		android:layout_marginLeft="160.0dp"
 		android:layout_marginTop="32dp"
 		android:id="@+id/tbPassword"
-		android:hint="Password"
+		android:hint="@string/tbPasswordd"
 		android:password="true"
 		android:textSize="22dp"
 		android:textColor="#4a1d10"

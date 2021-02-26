@@ -364,7 +364,7 @@ namespace WhoUnfollows
 
 
             var tab2 = ActionBar.NewTab();
-            tab2.SetText("Takip Etmeyenler");
+            tab2.SetText(Resources.GetText(Resource.String.takipetmeyenler));
             //tab.SetIcon(Resource.Drawable.tab1_icon);
             tab2.TabSelected += (sender2, args) =>
             {
@@ -377,7 +377,7 @@ namespace WhoUnfollows
 
 
             var tab3 = ActionBar.NewTab();
-            tab3.SetText("Hayranlar");
+            tab3.SetText(Resources.GetText(Resource.String.hayranlar));
             //tab.SetIcon(Resource.Drawable.tab1_icon);
             tab3.TabSelected += (sender2, args) =>
             {
@@ -390,7 +390,7 @@ namespace WhoUnfollows
 
 
             var tab4 = ActionBar.NewTab();
-            tab4.SetText("Hakkında");
+            tab4.SetText(Resources.GetText(Resource.String.hakkinda));
             //tab.SetIcon(Resource.Drawable.tab1_icon);
             tab4.TabSelected += (sender2, args) =>
             {
@@ -443,9 +443,9 @@ namespace WhoUnfollows
                     var takipetmeyenler = following.Except(followers).ToList();
                     var hayranlar = followers.Except(following).ToList();
 
-                    takipcii.Text = "Takip Etmeyen: " + takipetmeyenler.Count;
-                    takipciler.Text = "Takipçi: " + followers.Count;
-                    takipedilenler.Text = "Takip: " + following.Count;
+                    takipcii.Text = Resources.GetText(Resource.String.textView11) + takipetmeyenler.Count;
+                    takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + followers.Count;
+                    takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + following.Count;
 
 
                     foreach (var item in takipetmeyenler) 

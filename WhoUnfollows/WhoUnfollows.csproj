@@ -179,7 +179,9 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\colors.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\loginBtn.xml" />
+  </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values-en\Strings.xml" />
   </ItemGroup>

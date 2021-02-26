@@ -66,7 +66,7 @@ namespace WhoUnfollows
             Platform.Init(this, savedInstanceState);
             Batteries.Init();
 
-            var button = FindViewById<ImageButton>(Resource.Id.myButton);
+            var button = FindViewById<Button>(Resource.Id.myButton);
 
             yuklemeBar = FindViewById<ProgressBar>(Resource.Id.progressBar1);
 
@@ -167,7 +167,7 @@ namespace WhoUnfollows
 
         private async void butonTiklandiAsync(object sender, EventArgs e)
         {
-            var button = sender as ImageButton;
+            var button = sender as Button;
 
             var status = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
 
@@ -238,7 +238,7 @@ namespace WhoUnfollows
             }
         }
 
-        private async Task girisYapti(ImageButton button, IInstaApi instaApi)
+        private async Task girisYapti(Button button, IInstaApi instaApi)
         {
             SetContentView(Resource.Layout.Menu);
             var progress = new ProgressDialog(this);

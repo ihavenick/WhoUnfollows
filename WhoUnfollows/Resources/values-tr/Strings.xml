@@ -11,4 +11,5 @@
   <string name="pleasewait">Lütfen bekleyin\n Biraz sürebilir</string>
   <string name="uygulamaa">Geliştiriciler</string>
   <string name="takipcik">Çık</string>
+  <string name="loginbtn">Oturum aç</string>
 </resources>

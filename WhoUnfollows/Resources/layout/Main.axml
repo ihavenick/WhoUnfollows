@@ -51,7 +51,7 @@
 		android:textColor="#4a1d10"
 		android:textColorHint="#4a1d10" />
 
-    <ImageButton
+    <Button
         android:id="@+id/myButton"
         android:layout_width="104.0dp"
         android:layout_height="53.0dp"
@@ -59,9 +59,11 @@
         android:layout_marginTop="45.0dp"
         android:layout_below="@id/tbPassword"
         android:shadowColor="#ffff0000"
-        android:shadowDx="5"
-        android:shadowDy="5"
-        android:background="@mipmap/login"
+		android:text="@string/loginbtn"
+		android:background="@drawable/loginbtn"
+		android:textColor="#dbd49a"
+        
+        
         android:adjustViewBounds="true" 
         
 		/>

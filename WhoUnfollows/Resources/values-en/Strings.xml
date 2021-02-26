@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <string name="tbEmaill">Username</string>
+  <string name="tbPasswordd">Password</string>
+  <string name="textView11">Unfollowers: \n </string>
+  <string name="takipcilerr">Followers: </string>
+  <string name="takipedilenlerr">Following: </string>
+  <string name="uygulamaa">Developers</string>
+</resources>

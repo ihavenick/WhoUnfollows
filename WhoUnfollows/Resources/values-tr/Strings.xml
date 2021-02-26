@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <string name="tbEmaill">KUllanıcı Adı</string>
+  <string name="tbPasswordd">Parola</string>
+  <string name="textView11">Takip Etmeyenler: \n </string>
+  <string name="takipcilerr">Takipçi: </string>
+  <string name="takipedilenlerr">Takip: </string>
+  <string name="uygulamaa">Geliştiriciler</string>
+</resources>

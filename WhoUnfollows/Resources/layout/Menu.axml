@@ -225,7 +225,7 @@
 
 
         <TextView
-            android:text="Geliştiriciler"
+            android:text="@string/uygulamaa"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

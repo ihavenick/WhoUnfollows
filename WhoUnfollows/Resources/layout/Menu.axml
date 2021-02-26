@@ -72,7 +72,7 @@
 
 
         <TextView
-            android:text="Takip Etmeyenler: \n "
+            android:text="@string/textView11"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
 
 
         <TextView
-            android:text="Takipçi: "
+            android:text="@string/takipcilerr"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
 
 
         <TextView
-            android:text="Takip: "
+            android:text="@string/takipedilenlerr"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

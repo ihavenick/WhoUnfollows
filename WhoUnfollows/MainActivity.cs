@@ -39,6 +39,7 @@ namespace WhoUnfollows
         private readonly List<TableItem> tableItems = new List<TableItem>();
 
         private IInstaApi _instaApi;
+        private InterstitialAd interstitialAd;
         private IInstaApi _instaApi2;
         private int imageIndex = 0;
         private RelativeLayout rAnaSayfa;
@@ -76,6 +77,10 @@ namespace WhoUnfollows
             CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
 
             MobileAds.Initialize(this, "ca-app-pub-9927527797473679~9358311233");
+            interstitialAd = new InterstitialAd(this);
+            interstitialAd.AdUnitId = "ca-app-pub-9927527797473679/9807744047";
+            var requestbuilder = new AdRequest.Builder();
+            interstitialAd.LoadAd(requestbuilder.Build());
 
             userSession = new UserSessionData
             {
@@ -238,8 +243,7 @@ namespace WhoUnfollows
 
             var adRequest = new AdRequest.Builder().Build();
             adview.LoadAd(adRequest);
-            
-            
+
             var adview2 = FindViewById<AdView>(Resource.Id.adView2);
             
 
@@ -436,6 +440,9 @@ namespace WhoUnfollows
 
         private async void refresh_clickAsync(object sender, EventArgs e)
         {
+            
+            interstitialAd.Show();
+            
             var anaekran = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
             anaekran.Visibility = ViewStates.Invisible;
 

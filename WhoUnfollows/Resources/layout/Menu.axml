@@ -38,6 +38,16 @@
             android:id="@+id/pleaseWait"
             android:textColor="#4a1d10"/>
 
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="MEDIUM_RECTANGLE"
+            ads:adUnitId="ca-app-pub-9927527797473679/5706022590">
+        </com.google.android.gms.ads.AdView>
+
 
 
     </RelativeLayout>
@@ -205,15 +215,7 @@
             android:layout_height="fill_parent"
             android:layout_width="fill_parent" />
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-9927527797473679/5706022590">
-        </com.google.android.gms.ads.AdView>
+        
     </RelativeLayout>
 
     <RelativeLayout

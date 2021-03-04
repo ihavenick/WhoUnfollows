@@ -84,7 +84,7 @@ namespace WhoUnfollows
             };
 
 
-            var delay = RequestDelay.FromSeconds(2, 2);
+            //var delay = RequestDelay.FromSeconds(2, 2);
             // create new InstaApi instance using Builder
             _instaApi2 = InstaApiBuilder.CreateBuilder()
                 .UseLogger(new DebugLogger(LogLevel.Exceptions)) // use logger for requests and debug messages
@@ -235,10 +235,17 @@ namespace WhoUnfollows
 
             var adview = FindViewById<AdView>(Resource.Id.adView);
             
-            //adview.AdUnitId = "ca-app-pub-9927527797473679/5706022590";
 
             var adRequest = new AdRequest.Builder().Build();
             adview.LoadAd(adRequest);
+            
+            
+            var adview2 = FindViewById<AdView>(Resource.Id.adView2);
+            
+
+            var adRequest2 = new AdRequest.Builder().Build();
+            adview2.LoadAd(adRequest2);
+            
 
             rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
             rTakipci = FindViewById<RelativeLayout>(Resource.Id.takipcilerSayfasi);

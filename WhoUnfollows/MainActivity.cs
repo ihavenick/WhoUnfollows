@@ -8,6 +8,7 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Gms.Ads;
+using Android.Gms.Ads.AppOpen;
 using Android.Graphics;
 using Android.OS;
 using Android.Views;
@@ -18,7 +19,6 @@ using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Logger;
 using Plugin.Permissions;
-using SQLitePCL;
 using Xamarin.Essentials;
 using Environment = System.Environment;
 using Path = System.IO.Path;
@@ -51,6 +51,7 @@ namespace WhoUnfollows
         private EditText txtPassword;
         private UserSessionData userSession;
         private ProgressBar yuklemeBar;
+        private AppOpenManager appOpenManager;
 
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -62,10 +63,12 @@ namespace WhoUnfollows
             ActionBar.SetDisplayShowTitleEnabled(false);
             ActionBar.SetDisplayShowHomeEnabled(false);
 
+            appOpenManager = new AppOpenManager(this,this);
+
             SetContentView(Resource.Layout.Main);
 
             Platform.Init(this, savedInstanceState);
-            Batteries.Init();
+           // Batteries.Init();
 
             var button = FindViewById<Button>(Resource.Id.myButton);
 
@@ -77,10 +80,8 @@ namespace WhoUnfollows
             CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
 
             MobileAds.Initialize(this, "ca-app-pub-9927527797473679~9358311233");
-            interstitialAd = new InterstitialAd(this);
-            interstitialAd.AdUnitId = "ca-app-pub-9927527797473679/9807744047";
-            var requestbuilder = new AdRequest.Builder();
-            interstitialAd.LoadAd(requestbuilder.Build());
+           
+            
 
             userSession = new UserSessionData
             {
@@ -141,6 +142,18 @@ namespace WhoUnfollows
 
 
             button.Click += butonTiklandiAsync;
+        }
+
+        protected override void OnStart()
+        {
+            appOpenManager.Fetch();
+            base.OnStart();
+        }
+
+        protected override void OnRestart()
+        {
+            appOpenManager.Fetch();
+            base.OnRestart();
         }
 
         private void logoutAsync(object sender, EventArgs e)
@@ -440,9 +453,6 @@ namespace WhoUnfollows
 
         private async void refresh_clickAsync(object sender, EventArgs e)
         {
-            
-            interstitialAd.Show();
-            
             var anaekran = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
             anaekran.Visibility = ViewStates.Invisible;
 

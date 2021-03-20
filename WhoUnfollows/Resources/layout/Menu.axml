@@ -213,7 +213,8 @@
         <ListView
             android:id="@+id/listView2"
             android:layout_height="fill_parent"
-            android:layout_width="fill_parent" />
+            android:layout_width="fill_parent" 
+        />
 
         
     </RelativeLayout>
@@ -231,10 +232,10 @@
             android:layout_width="200dp"
             android:layout_height="300dp"
             android:id="@+id/hakkindaLogo"
-            android:src="@mipmap/logo1"
-            android:layout_marginLeft="100.0dp"
+            android:src="@mipmap/logo1"          
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="31.0dp" 
-             />
+         />
 
 
 
@@ -248,7 +249,9 @@
             android:layout_alignParentRight="false"
             android:layout_below="@id/hakkindaLogo"
             android:id="@+id/uygulama"
-            android:textColor="#4a1d10" />
+            android:textColor="#4a1d10"
+        />
+
         <TextView
             android:text="@ramazankabadayi"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -256,35 +259,36 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            
             android:layout_marginRight="121.5dp"
             android:layout_below="@id/uygulama"
             android:id="@+id/ramazan"
             android:textColor="#4a1d10"
             android:textSize="15dp"
-            />
+        />
+
         <TextView
             android:text="@atacetin_"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-           
-            
+            android:layout_centerHorizontal="true"            
             android:layout_below="@id/ramazan"
             android:id="@+id/ata"
             android:textColor="#4a1d10"
             android:textSize="15dp"
-            android:layout_marginTop="2.5dp"/>
+            android:layout_marginTop="2.5dp"
+        />
+
         <ImageView
-                android:layout_width="200dp"
-                android:layout_height="300dp"
-                android:id="@+id/sukulitlogo"
-                android:src="@mipmap/sukulitlogo4"
-                android:layout_below="@id/ata"
-                android:layout_marginLeft="100.0dp"
-                android:layout_marginBottom="31.0dp"
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:id="@+id/sukulitlogo"
+            android:src="@mipmap/sukulitlogo4"
+            android:layout_below="@id/ata"
+            android:layout_marginTop="25dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"         
         />
 
 

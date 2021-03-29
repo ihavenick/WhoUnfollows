@@ -144,17 +144,17 @@ namespace WhoUnfollows
             button.Click += butonTiklandiAsync;
         }
 
-        protected override void OnStart()
-        {
-            appOpenManager.Fetch();
-            base.OnStart();
-        }
+        // protected override void OnStart()
+        // {
+        //    
+        //     base.OnStart();
+        // }
 
-        protected override void OnRestart()
-        {
-            appOpenManager.Fetch();
-            base.OnRestart();
-        }
+        // protected override void OnRestart()
+        // {
+        //     appOpenManager.Fetch();
+        //     base.OnRestart();
+        // }
 
         private void logoutAsync(object sender, EventArgs e)
         {
@@ -244,6 +244,7 @@ namespace WhoUnfollows
 
         private async Task girisYapti(Button button, IInstaApi instaApi)
         {
+            appOpenManager.Fetch();
             SetContentView(Resource.Layout.Menu);
             var progress = new ProgressDialog(this);
 

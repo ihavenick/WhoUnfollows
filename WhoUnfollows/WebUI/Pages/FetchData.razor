@@ -1,0 +1,64 @@
+@page "/fetchdata"
+@using InstaSharper.Classes.Models
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
+    <MudText Typo="Typo.h3" GutterBottom="true">Unfollowers</MudText>
+    <MudText Class="mb-8">See who not following you</MudText>
+
+@if (notFollowers == null)
+{
+    <MudCard>
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px"/>
+        <MudCardContent>
+            <MudSkeleton Width="30%" Height="42px;" />
+            <MudSkeleton Width="80%" />
+            <MudSkeleton Width="100%" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+            <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+        </MudCardActions>
+    </MudCard>
+}
+else
+{
+    @foreach (var item in notFollowers)
+    {
+        <MudCard>
+            <MudCardHeader>
+                    <CardHeaderAvatar>
+                    <MudAvatar Color="MudBlazor.Color.Secondary" Style="height: 60px;width: 60px;"><img src="@item.ProfilePicture"/></MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">@item.UserName</MudText>
+                        <MudText Typo="Typo.body2">@item.FullName</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Crop" Color="MudBlazor.Color.Default" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+        </MudCard>
+        
+        <br/>
+    }
+    
+   
+    
+    
+   
+}
+
+</MudContainer>
+@code {
+    private List<InstaUserShort> notFollowers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // The static web asset is loaded from the wwwroot from _content/<AssemblyOrNugetName>/weather.json
+        // see https://docs.microsoft.com/aspnet/core/razor-pages/ui-class?view=aspnetcore-3.1&tabs=visual-studio#consume-content-from-a-referenced-rcl for more info
+
+        if (UserState.isLoggedIn)
+            notFollowers = UserState.NotFollowers;
+    }
+    
+}

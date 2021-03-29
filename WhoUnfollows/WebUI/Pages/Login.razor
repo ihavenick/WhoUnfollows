@@ -1,0 +1,50 @@
+﻿@page "/Login"
+@inject NavigationManager NavigationManager
+
+<div style="max-width: 400px;">
+    <MudCard>
+        <MudCardContent>
+            <MudForm @ref="form">
+                <MudTextField T="string" Label="Username" Required="true" @ref="usernamefield" RequiredError="User name is required!"/>
+                
+                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="passwordfield"
+                              InputType="InputType.Password" Required="true"
+                              RequiredError="Password is required!"/>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Warning" OnClick="@(async () => await LoginButton())"  Class="ml-auto">Login</MudButton>
+        </MudCardActions>
+    </MudCard>
+    
+
+    @* <MudExpansionPanels> *@
+    @*     <MudExpansionPanel Text="@($"Show Errors ({errors.Length})")"> *@
+    @*         @foreach (var error in errors) *@
+    @*         { *@
+    @*             <MudText Color="@Color.Error">@error</MudText> *@
+    @*         } *@
+    @*     </MudExpansionPanel> *@
+    @* </MudExpansionPanels> *@
+</div>
+@code {
+    bool success;
+    //string[] errors = { };
+    MudTextField<string> passwordfield;
+    MudTextField<string> usernamefield;
+    MudForm form;
+
+    private async Task LoginButton()
+    {
+        if (passwordfield.Text.Length>0&&usernamefield.Text.Length>0)
+        {
+           var sucsess = await UserState.Login(usernamefield.Text, passwordfield.Text);
+
+            if (sucsess)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+        }
+    }
+
+}

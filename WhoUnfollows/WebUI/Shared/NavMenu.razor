@@ -1,0 +1,13 @@
+
+
+<MudNavMenu>
+      <MudText Typo="Typo.h6">WhoUnfollows</MudText>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+   
+    @if (UserState.isLoggedIn)
+    {
+        <MudNavLink Href="fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Unfollowers</MudNavLink>
+        <MudNavLink Href="logout" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Log out</MudNavLink>
+    }
+     
+</MudNavMenu>

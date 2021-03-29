@@ -1,0 +1,40 @@
+@inherits LayoutComponentBase
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="5" Dense="true" Color="MudBlazor.Color.Warning">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="MudBlazor.Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText>WhoUnfollows</MudText>
+        <MudAppBarSpacer />
+        @if (UserState.isLoggedIn)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="MudBlazor.Color.Inherit" Target="/Logout" />
+        }
+        else
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Login" Color="MudBlazor.Color.Inherit" Link="/Login" Target="/Login" />
+        }
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+        <MudDrawerHeader>
+            <img src="_content/hybrid/img/logo.png" Style="height:150px; width:150px;" Class="ma-2"  />
+                      
+        </MudDrawerHeader>
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

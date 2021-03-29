@@ -1,0 +1,13 @@
+﻿@page "/Logout"
+@inject NavigationManager NavigationManager
+<h3>Logout</h3>
+
+@code {
+    protected override void OnInitialized()
+    {
+        UserState.Logout();
+        NavigationManager.NavigateTo("Login");
+        base.OnInitialized();
+    }
+
+}

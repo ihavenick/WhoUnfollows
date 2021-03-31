@@ -59,27 +59,52 @@
                     </MudGrid>
     <MudGrid Justify="Justify.Center">
         @* <div style="max-width: 400px;"> *@
-        <MudCard>
+        <MudCard Class="mud-grid-item-xs-8">
+            @if (loading)
+            {
+                <MudText></MudText>
+                <br/>
+                <MudGrid Justify="Justify.Center">
+                    
+                    <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true"/>
+                    
+                </MudGrid>
+                <MudText></MudText>
+                <br/>
+            }
+            else
+            {
+                
+            
+            
+            
             <MudCardContent>
-                 <MudGrid Justify="Justify.Center">
-                                        <MudText Typo="Typo.h4">WhoUnfollows</MudText>
-                                    </MudGrid>
+                <MudGrid Justify="Justify.Center">
+                    <MudText Typo="Typo.h4">WhoUnfollows</MudText>
+                </MudGrid>
 
 
 
 
 
                 <MudForm @ref="form">
-                    <MudTextField T="string" Label="Username" Required="true" @ref="                          usernamefield" RequiredError="User name is required!"/>
+                    <MudTextField T="string"
+                                  Label="Username"
+                                  Required="true"
+                                  @ref="usernamefield"
+                                  RequiredError="User name is required!"/>
 
-                    <MudTextField T="string" Label="Password" HelperText="Your Instagram Credinals" @ref="                          passwordfield"
+                    <MudTextField T="string" Label="Password"
+                                  HelperText="Your Instagram Credinals"
+                                  @ref="passwordfield"
                                   InputType="InputType.Password" Required="true"
                                   RequiredError="Password is required!"/>
                 </MudForm>
             </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="@(async () => await LoginButton())" Class="ml-auto">Login</MudButton>
-            </MudCardActions>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="@(async () => await LoginButton())" Class="ml-auto">Login</MudButton>
+                </MudCardActions>
+            }
         </MudCard>
 
 
@@ -98,6 +123,7 @@
 
 @code {
     bool success;
+    bool loading = false;
     //string[] errors = { };
     MudTextField<string> passwordfield;
     MudTextField<string> usernamefield;
@@ -105,14 +131,16 @@
 
     private async Task LoginButton()
     {
-        if (passwordfield.Text.Length > 0 && usernamefield.Text.Length > 0)
+        if (passwordfield.Text != null && usernamefield.Text != null)
         {
-            var sucsess = await UserState.Login(usernamefield.Text, passwordfield.Text);
+            loading = true;
+            var sucsess = await UserState.Login(usernamefield.Text.ToLower(), passwordfield.Text);
 
             if (sucsess)
             {
                 NavigationManager.NavigateTo("/");
             }
+            loading = false;
         }
     }
     

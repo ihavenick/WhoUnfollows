@@ -1,16 +1,18 @@
 @page "/counter"
 @inject CounterState CounterState
+@using Color = MudBlazor.Color
 @implements IDisposable
 
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
     <MudText Typo="Typo.h3" GutterBottom="true">Counter</MudText>
     <MudText Class="mb-4">Current count: @CounterState.CurrentCount</MudText>
-    <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled" @onclick="CounterState.IncrementCount">Click me</MudButton>
+    <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="CounterState.IncrementCount">Click me</MudButton>
 </MudContainer>
 
 
 @code {
+
     protected override void OnInitialized()
     {
         CounterState.StateChanged += StateHasChanged;
@@ -20,4 +22,5 @@
     {
         CounterState.StateChanged -= StateHasChanged;
     }
+
 }

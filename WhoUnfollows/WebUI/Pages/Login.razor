@@ -1,32 +1,101 @@
 ﻿@page "/Login"
+@using Color = MudBlazor.Color
 @inject NavigationManager NavigationManager
 
-<div style="max-width: 400px;">
-    <MudCard>
-        <MudCardContent>
-            <MudForm @ref="form">
-                <MudTextField T="string" Label="Username" Required="true" @ref="usernamefield" RequiredError="User name is required!"/>
-                
-                <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="passwordfield"
-                              InputType="InputType.Password" Required="true"
-                              RequiredError="Password is required!"/>
-            </MudForm>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Warning" OnClick="@(async () => await LoginButton())"  Class="ml-auto">Login</MudButton>
-        </MudCardActions>
-    </MudCard>
+<style>
+    body, html {
+      height: 100%;
+      
+    }
     
+    * {
+      box-sizing: border-box;
+    }
+    
+    .bg-image {
+      /* The image used */
+      background: rgb(34,193,195);
+      background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+    
+      /* Add the blur effect */
+      filter: blur(8px);
+      -webkit-filter: blur(8px);
+    
+      /* Full height */
+      height: 100%;
+    
+      /* Center and scale the image nicely */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    
+    /* Position text in the middle of the page/image */
+    .bg-text {
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+      color: white;
+      font-weight: bold;
+      border: 3px solid #f1f1f1;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 80%;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    
+</style>
 
-    @* <MudExpansionPanels> *@
-    @*     <MudExpansionPanel Text="@($"Show Errors ({errors.Length})")"> *@
-    @*         @foreach (var error in errors) *@
-    @*         { *@
-    @*             <MudText Color="@Color.Error">@error</MudText> *@
-    @*         } *@
-    @*     </MudExpansionPanel> *@
-    @* </MudExpansionPanels> *@
-</div>
+<div class="bg-image"></div>
+
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
+     <MudGrid Justify="Justify.Center">
+                        <img style="max-width: 200px; max-height: 200px" class="mud-typography-align-center" src="_content/WhoUnfollows/img/logo.png"/>
+                    </MudGrid>
+    <MudGrid Justify="Justify.Center">
+        @* <div style="max-width: 400px;"> *@
+        <MudCard>
+            <MudCardContent>
+                 <MudGrid Justify="Justify.Center">
+                                        <MudText Typo="Typo.h4">WhoUnfollows</MudText>
+                                    </MudGrid>
+
+
+
+
+
+                <MudForm @ref="form">
+                    <MudTextField T="string" Label="Username" Required="true" @ref="                          usernamefield" RequiredError="User name is required!"/>
+
+                    <MudTextField T="string" Label="Password" HelperText="Your Instagram Credinals" @ref="                          passwordfield"
+                                  InputType="InputType.Password" Required="true"
+                                  RequiredError="Password is required!"/>
+                </MudForm>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="@(async () => await LoginButton())" Class="ml-auto">Login</MudButton>
+            </MudCardActions>
+        </MudCard>
+
+
+        @* <MudExpansionPanels> *@
+        @*     <MudExpansionPanel Text="@($"Show Errors ({errors.Length})")"> *@
+        @*         @foreach (var error in errors) *@
+        @*         { *@
+        @*             <MudText Color="@Color.Error">@error</MudText> *@
+        @*         } *@
+        @*     </MudExpansionPanel> *@
+        @* </MudExpansionPanels> *@
+        @* </div> *@
+    </MudGrid>
+</MudContainer>
+
+
 @code {
     bool success;
     //string[] errors = { };
@@ -36,9 +105,9 @@
 
     private async Task LoginButton()
     {
-        if (passwordfield.Text.Length>0&&usernamefield.Text.Length>0)
+        if (passwordfield.Text.Length > 0 && usernamefield.Text.Length > 0)
         {
-           var sucsess = await UserState.Login(usernamefield.Text, passwordfield.Text);
+            var sucsess = await UserState.Login(usernamefield.Text, passwordfield.Text);
 
             if (sucsess)
             {
@@ -46,5 +115,6 @@
             }
         }
     }
+    
 
 }

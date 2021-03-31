@@ -5,7 +5,7 @@
     <StackLayout>
 
         <BlazorWebView VerticalOptions="LayoutOptions.FillAndExpand">
-            <hybrid.WebUI.App />
+            <WhoUnfollows.WebUI.App/>
         </BlazorWebView>
 
     </StackLayout>
@@ -13,7 +13,7 @@
 
 
 @code {
-    
+
     protected override void OnInitialized()
     {
         UserState.StateChanged += StateHasChanged;
@@ -25,4 +25,5 @@
         CounterState.StateChanged -= StateHasChanged;
         UserState.StateChanged -= StateHasChanged;
     }
+
 }

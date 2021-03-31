@@ -1,10 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
 using Microsoft.MobileBlazorBindings;
-using Xamarin.Essentials;
-using MudBlazor;
 using MudBlazor.Services;
 using Xamarin.Forms;
 
@@ -28,17 +24,13 @@ namespace WhoUnfollows
                 .UseWebRoot("wwwroot");
 
             if (fileProvider != null)
-            {
                 hostBuilder.UseStaticFiles(fileProvider);
-            }
             else
-            {
                 hostBuilder.UseStaticFiles();
-            }
             var host = hostBuilder.Build();
 
-            MainPage = new ContentPage { Title = "My Application" };
-            host.AddComponent<Main>(parent: MainPage);
+            MainPage = new ContentPage {Title = "WhoUnfollows"};
+            host.AddComponent<Main>(MainPage);
         }
 
         protected override void OnStart()

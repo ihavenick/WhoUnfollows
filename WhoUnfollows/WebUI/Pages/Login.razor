@@ -78,34 +78,56 @@
             
             
             
-            <MudCardContent>
-                <MudGrid Justify="Justify.Center">
-                    <MudText Typo="Typo.h4">WhoUnfollows</MudText>
-                </MudGrid>
+                <MudCardContent>
+                    <MudGrid Justify="Justify.Center">
+                        <MudText Typo="Typo.h4">WhoUnfollows</MudText>
+                    </MudGrid>
 
 
 
 
 
-                <MudForm @ref="form">
-                    <MudTextField T="string"
-                                  Label="Username"
-                                  Required="true"
-                                  @ref="usernamefield"
-                                  RequiredError="User name is required!"/>
+                    <MudForm @ref="form">
+                        <MudTextField T="string"
+                                      Label="Username"
+                                      Required="true"
+                                      @ref="usernamefield"
+                                      RequiredError="User name is required!"/>
 
-                    <MudTextField T="string" Label="Password"
-                                  HelperText="Your Instagram Credinals"
-                                  @ref="passwordfield"
-                                  InputType="InputType.Password" Required="true"
-                                  RequiredError="Password is required!"/>
-                </MudForm>
-            </MudCardContent>
+                        <MudTextField T="string" Label="Password"
+                                      HelperText="Your Instagram Credinals"
+                                      @ref="passwordfield"
+                                      InputType="InputType.Password" Required="true"
+                                      RequiredError="Password is required!"/>
+                    </MudForm>
+                </MudCardContent>
                 <MudCardActions>
                     <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="@(async () => await LoginButton())" Class="ml-auto">Login</MudButton>
                 </MudCardActions>
             }
         </MudCard>
+        
+        <MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
+            <MessageContent>
+                <MudTextField T="string" Label="Two factor code"
+                              HelperText="Your Instagram Credinals"
+                              @ref="twofactorCode"
+                              InputType="InputType.Text" Required="true"
+                              RequiredError="Password is required!"/>
+            </MessageContent>
+            <YesButton>
+                <MudButton OnClick="@(async () => await TwoFactorLogin())" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Login!</MudButton>
+            </YesButton>
+        </MudMessageBox>
+        
+         <MudMessageBox @ref="mmbox" Title="Warning" CancelText="Cancel">
+                    <MessageContent>
+                        <MudTextField T="string" @ref="errorText"></MudTextField>
+                    </MessageContent>
+                    <YesButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Ok!</MudButton>
+                    </YesButton>
+                </MudMessageBox>
 
 
         @* <MudExpansionPanels> *@
@@ -127,7 +149,11 @@
     //string[] errors = { };
     MudTextField<string> passwordfield;
     MudTextField<string> usernamefield;
+    MudTextField<string> twofactorCode;
+    MudTextField<string> errorText;
     MudForm form;
+    MudMessageBox mbox { get; set; }
+    MudMessageBox mmbox { get; set; }
 
     private async Task LoginButton()
     {
@@ -136,12 +162,40 @@
             loading = true;
             var sucsess = await UserState.Login(usernamefield.Text.ToLower(), passwordfield.Text);
 
-            if (sucsess)
+            if (sucsess=="true")
             {
                 NavigationManager.NavigateTo("/");
             }
+            
+            else if (sucsess=="twofactor")
+            {
+                await mbox.Show();
+                StateHasChanged();
+            }
+            else
+            {
+                
+                errorText.Text = sucsess;
+                await mmbox.Show();
+            }
             loading = false;
         }
+    }
+
+    private async Task TwoFactorLogin()
+    {
+        loading = true;
+        var result = UserState.TwoFactorLogin(twofactorCode.Text);
+        if (result.Result)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            errorText.Text = "result.Result";
+            await mmbox.Show();
+        }
+        loading = false;
     }
     
 

@@ -113,25 +113,23 @@ namespace WhoUnfollows
                 // load session file if exists
                 if (File.Exists(stateFile))
                 {
-                    using (var fs = File.OpenRead(stateFile))
+                    using var fs = File.OpenRead(stateFile);
+                    _instaApi2.LoadStateDataFromStream(fs);
+                    if (_instaApi2.IsUserAuthenticated)
                     {
-                        _instaApi2.LoadStateDataFromStream(fs);
-                        if (_instaApi2.IsUserAuthenticated)
+                        var result2 = Task.Run(async () => await _instaApi2.UserProcessor.GetUserFollowingAsync(
+                            _instaApi2.GetLoggedUser().LoggedInUser.UserName,
+                            PaginationParameters.MaxPagesToLoad(1))).Result;
+                        var following = result2.Value;
+
+                        if (following == null)
                         {
-                            var result2 = Task.Run(async () => await _instaApi2.UserProcessor.GetUserFollowingAsync(
-                                _instaApi2.GetLoggedUser().LoggedInUser.UserName,
-                                PaginationParameters.MaxPagesToLoad(1))).Result;
-                            var following = result2.Value;
-
-                            if (following == null)
-                            {
-                                _instaApi2.LogoutAsync();
-                                File.Delete(stateFile);
-                                throw new InvalidOperationException("Oturum süreniz dolmuş");
-                            }
-
-                            girisYapti(button, _instaApi2);
+                            _instaApi2.LogoutAsync();
+                            File.Delete(stateFile);
+                            throw new InvalidOperationException("Oturum süreniz dolmuş");
                         }
+
+                        girisYapti(button, _instaApi2);
                     }
                 }
             }
@@ -235,6 +233,10 @@ namespace WhoUnfollows
                                     if (twoFactorLogin.Succeeded)
                                     {
                                         await girisYapti(button, _instaApi);
+                                        var state2 = await _instaApi.GetStateDataAsStreamAsync();
+                                        await using var fileStream2 = File.Create(stateFile);
+                                        state2.Seek(0, SeekOrigin.Begin);
+                                        await state2.CopyToAsync(fileStream2);
                                     }
                                     else
                                     {
@@ -256,6 +258,10 @@ namespace WhoUnfollows
                             if (challenge.Succeeded)
                             {
                                 await girisYapti(button, _instaApi);
+                                var state2 = await _instaApi.GetStateDataAsStreamAsync();
+                                await using var fileStream2 = File.Create(stateFile);
+                                state2.Seek(0, SeekOrigin.Begin);
+                                await state2.CopyToAsync(fileStream2);
                                 return;
                             }
                             else
@@ -269,24 +275,28 @@ namespace WhoUnfollows
                         case InstaLoginResult.Success:
                             break;
                         case InstaLoginResult.BadPassword:
+                            HataGoster(logInResult.Info.Message);
                             break;
                         case InstaLoginResult.InvalidUser:
+                            HataGoster(logInResult.Info.Message);
                             break;
                         case InstaLoginResult.Exception:
+                            Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long)?.Show();
+                            HataGoster(logInResult.Info.Message);
                             break;
                         case InstaLoginResult.LimitError:
+                            HataGoster(logInResult.Info.Message);
                             break;
                         case InstaLoginResult.InactiveUser:
+                            HataGoster(logInResult.Info.Message);
                             break;
                         case InstaLoginResult.CheckpointLoggedOut:
+                            HataGoster(logInResult.Info.Message);
+                            
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-
-
-                    Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long)?.Show();
-                    HataGoster(logInResult.Info.Message);
                     yuklemeBar.Visibility = ViewStates.Invisible;
                     return;
                 }
@@ -385,7 +395,6 @@ namespace WhoUnfollows
             };
             ActionBar.AddTab(tab3);
 
-
             var tab4 = ActionBar.NewTab();
             tab4.SetText(Resources.GetText(Resource.String.hakkinda));
             //tab.SetIcon(Resource.Drawable.tab1_icon);
@@ -425,15 +434,15 @@ namespace WhoUnfollows
                 yukleme.Visibility = ViewStates.Visible;
 
                 var result = await instaApi.UserProcessor.GetUserFollowersAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"",true);
                 var followers = result.Value;
 
-
                 var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"");
                 var following = result2.Value;
 
-                if (following == null || followers == null)
+
+                if (result.Succeeded || result2.Succeeded)
                     refresh_clickAsync(button, new EventArgs());
 
 

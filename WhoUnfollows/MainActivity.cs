@@ -18,9 +18,11 @@ using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Logger;
+using Java.Lang;
 using Plugin.Permissions;
 using Xamarin.Essentials;
 using Environment = System.Environment;
+using Exception = System.Exception;
 using Path = System.IO.Path;
 using Permission = Plugin.Permissions.Abstractions.Permission;
 using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
@@ -432,26 +434,35 @@ namespace WhoUnfollows
 
 
                 yukleme.Visibility = ViewStates.Visible;
+                
+                instaApi.SetTimeout(TimeSpan.FromMinutes(10));
+                instaApi.SetRequestDelay(RequestDelay.FromSeconds(2,3));
 
-                var result = await instaApi.UserProcessor.GetUserFollowersAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"",true);
-                var followers = result.Value;
+                var result = await instaApi.UserProcessor.GetCurrentUserFollowersAsync(
+                    PaginationParameters.Empty);
 
                 var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
                     instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"");
-                var following = result2.Value;
-
+                
+                instaApi.SetTimeout(TimeSpan.FromMinutes(10));
+                instaApi.SetRequestDelay(RequestDelay.FromSeconds(0,3));
 
                 if (result.Succeeded || result2.Succeeded)
                     refresh_clickAsync(button, new EventArgs());
 
-
-                var takipetmeyenler = following.Except(followers).ToList();
+                var following = result2.Value;
+                var followers = result.Value;
+                
+                var takipetmeyenler = following
+                    .Where(w => !followers.Contains(w))
+                    .ToList();
                 var hayranlar = followers.Except(following).ToList();
 
                 takipcii.Text = Resources.GetText(Resource.String.textView11) + takipetmeyenler.Count;
                 takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + followers.Count;
                 takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + following.Count;
+                
+                tableItems.Clear();
 
 
                 foreach (var item in takipetmeyenler)
@@ -554,16 +565,23 @@ namespace WhoUnfollows
                 var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
                 var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
 
-                var result = await instaApi.UserProcessor.GetUserFollowersAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
-                var followers = result.Value;
+                instaApi.SetTimeout(TimeSpan.FromMinutes(10));
+                instaApi.SetRequestDelay(RequestDelay.FromSeconds(2,3));
+
+                var result = await instaApi.UserProcessor.GetCurrentUserFollowersAsync(
+                    PaginationParameters.Empty);
 
                 var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.MaxPagesToLoad(100));
-                var following = result2.Value;
+                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"");
+                
+                instaApi.SetTimeout(TimeSpan.FromMinutes(10));
+                instaApi.SetRequestDelay(RequestDelay.FromSeconds(0,3));
 
-                if (followers == null || following == null)
-                    logoutAsync(sender, e);
+                if (!(result.Succeeded || result2.Succeeded))
+                    throw new Error();
+
+                var following = result2.Value;
+                var followers = result.Value;
 
                 var takipetmeyenler = following.Except(followers).ToList();
                 var hayranlar = followers.Except(following).ToList();
@@ -574,6 +592,8 @@ namespace WhoUnfollows
                 takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + following.Count;
                 kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
 
+                tableItems.Clear();
+                
                 foreach (var item in takipetmeyenler)
                     tableItems.Add(new TableItem
                     {

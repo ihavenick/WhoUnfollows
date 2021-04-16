@@ -44,7 +44,6 @@ namespace WhoUnfollows
         private IInstaApi _instaApi;
         private InterstitialAd interstitialAd;
         private IInstaApi _instaApi2;
-        private string LatestMaxId = "";
         private int imageIndex = 0;
         private RelativeLayout rAnaSayfa;
         private RelativeLayout rHakkinda;
@@ -446,16 +445,17 @@ namespace WhoUnfollows
                 
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(2,3));
 
-                var result = await instaApi.UserProcessor.GetCurrentUserFollowersAsync(
+                var result = await instaApi.UserProcessor.GetUserFollowersByIdAsync(instaApi.GetLoggedUser().LoggedInUser.Pk,
                     PaginationParameters.Empty);
 
-                var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"");
+                var result2 = await instaApi.UserProcessor.GetUserFollowingByIdAsync(
+                    instaApi.GetLoggedUser().LoggedInUser.Pk, PaginationParameters.Empty);
+
                 
                 
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(0,3));
 
-                if (result.Succeeded || result2.Succeeded)
+                if (!(result.Succeeded || result2.Succeeded))
                     //refresh_clickAsync(button, new EventArgs());
                     HataGoster(result.Info + " " + result2.Info);
 
@@ -466,10 +466,14 @@ namespace WhoUnfollows
                     .Where(w => !followers.Contains(w))
                     .ToList();
                 var hayranlar = followers.Except(following).ToList();
+                
+                
+                var userinfo = await
+                    instaApi.UserProcessor.GetUserInfoByUsernameAsync(instaApi.GetLoggedUser().LoggedInUser.UserName);
 
                 takipcii.Text = Resources.GetText(Resource.String.textView11) + takipetmeyenler.Count;
-                takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + followers.Count;
-                takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + following.Count;
+                takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + userinfo.Value.FollowerCount;
+                takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + userinfo.Value.FollowingCount;
                 
                 tableItems.Clear();
 
@@ -548,29 +552,6 @@ namespace WhoUnfollows
             StartActivity(intent);
         }
         
-        InstaUserShortList List = new InstaUserShortList();
-        private async Task<bool> TakipciGetir(long UserId)
-        {
-            
-            IInstaApi instaApi;
-
-            if (_instaApi != null)
-                instaApi = _instaApi;
-            else
-                instaApi = _instaApi2;
-
-            var followers = await instaApi.UserProcessor
-                .GetUserFollowersByIdAsync(UserId, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(LatestMaxId));
-
-            LatestMaxId = followers.Value.NextMaxId;
-            if (followers.Succeeded)
-            {
-                List.AddRange(followers.Value);
-                return true;
-            }
-            else
-                return false;
-        }
 
         private async void refresh_clickAsync(object sender, EventArgs e)
         {
@@ -600,37 +581,32 @@ namespace WhoUnfollows
                 var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
                 var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
                 
-                instaApi.SetRequestDelay(RequestDelay.FromSeconds(2,3));
 
-                //var result = instaApi.UserProcessor.GetUserFollowersByIdAsync(instaApi.GetLoggedUser().LoggedInUser.Pk, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(null));
 
-                var result2 = instaApi.UserProcessor.GetUserFollowingByIdAsync(instaApi.GetLoggedUser().LoggedInUser.Pk, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(null),"");
-                
-                do
-                {
-                    var flag = await TakipciGetir(instaApi.GetLoggedUser().LoggedInUser.Pk);
-                } while (LatestMaxId != null);
-                
-                
-                
-                
-                
-                
-                instaApi.SetRequestDelay(RequestDelay.FromSeconds(0,3));
+                var result = await instaApi.UserProcessor.GetUserFollowersByIdAsync(instaApi.GetLoggedUser().LoggedInUser.Pk,
+                    PaginationParameters.Empty);
 
-                // if (!(result.Status ==  || result2.Succeeded))
-                //     throw new Error();
+                var result2 = await instaApi.UserProcessor.GetUserFollowingByIdAsync(
+                    instaApi.GetLoggedUser().LoggedInUser.Pk, PaginationParameters.Empty);
+                
 
-                var following = result2.Result.Value;
-                var followers = List;
+
+                 if (!(result.Succeeded || result2.Succeeded))
+                     throw new Error();
+
+                var following = result2.Value;
+                var followers = result.Value;
 
                 var takipetmeyenler = following.Except(followers).ToList();
                 var hayranlar = followers.Except(following).ToList();
 
+                var userinfo = await
+                    instaApi.UserProcessor.GetUserInfoByUsernameAsync(instaApi.GetLoggedUser().LoggedInUser.UserName);
+
 
                 takipci.Text = Resources.GetText(Resource.String.textView11) + takipetmeyenler.Count;
-                takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + followers.Count;
-                takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + following.Count;
+                takipciler.Text = Resources.GetText(Resource.String.takipcilerr) + userinfo.Value.FollowerCount;
+                takipedilenler.Text = Resources.GetText(Resource.String.takipedilenlerr) + userinfo.Value.FollowingCount;
                 kullaniciAdi.Text = instaApi.GetLoggedUser().LoggedInUser.UserName;
 
                 tableItems.Clear();

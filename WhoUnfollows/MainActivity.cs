@@ -574,20 +574,19 @@ namespace WhoUnfollows
                 
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(2,3));
 
-                var result = await instaApi.UserProcessor.GetCurrentUserFollowersAsync(
+                var result = instaApi.UserProcessor.GetCurrentUserFollowersAsync(
                     PaginationParameters.Empty);
 
-                var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
+                var result2 = instaApi.UserProcessor.GetUserFollowingAsync(
                     instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"");
                 
-                instaApi.SetTimeout(TimeSpan.FromMinutes(10));
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(0,3));
 
-                if (!(result.Succeeded || result2.Succeeded))
-                    throw new Error();
+                // if (!(result.Status ==  || result2.Succeeded))
+                //     throw new Error();
 
-                var following = result2.Value;
-                var followers = result.Value;
+                var following = result2.Result.Value;
+                var followers = result.Result.Value;
 
                 var takipetmeyenler = following.Except(followers).ToList();
                 var hayranlar = followers.Except(following).ToList();

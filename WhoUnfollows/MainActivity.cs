@@ -94,8 +94,9 @@ namespace WhoUnfollows
             //var delay = RequestDelay.FromSeconds(2, 2);
             // create new InstaApi instance using Builder
             _instaApi2 = InstaApiBuilder.CreateBuilder()
-                .UseLogger(new DebugLogger(LogLevel.Exceptions)) // use logger for requests and debug messages
+                .SetRequestDelay(RequestDelay.FromSeconds(0,0))
                 .Build();
+            _instaApi2.SetTimeout(TimeSpan.FromMinutes(10));
 
             try
             {
@@ -209,8 +210,10 @@ namespace WhoUnfollows
 
             _instaApi = InstaApiBuilder.CreateBuilder()
                 .SetUser(userSession)
-                .UseLogger(new DebugLogger(LogLevel.Exceptions))
+                .SetRequestDelay(RequestDelay.FromSeconds(0,0))
                 .Build();
+            
+            _instaApi.SetTimeout(TimeSpan.FromMinutes(10));
 
 
             if (!_instaApi.IsUserAuthenticated)
@@ -435,7 +438,7 @@ namespace WhoUnfollows
 
                 yukleme.Visibility = ViewStates.Visible;
                 
-                instaApi.SetTimeout(TimeSpan.FromMinutes(10));
+                
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(2,3));
 
                 var result = await instaApi.UserProcessor.GetCurrentUserFollowersAsync(

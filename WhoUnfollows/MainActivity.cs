@@ -63,12 +63,12 @@ namespace WhoUnfollows
             ActionBar.SetDisplayShowTitleEnabled(false);
             ActionBar.SetDisplayShowHomeEnabled(false);
 
-            appOpenManager = new AppOpenManager(this,this);
+            appOpenManager = new AppOpenManager(this, this);
 
             SetContentView(Resource.Layout.Main);
 
             Platform.Init(this, savedInstanceState);
-           // Batteries.Init();
+            // Batteries.Init();
 
             var button = FindViewById<Button>(Resource.Id.myButton);
 
@@ -80,8 +80,7 @@ namespace WhoUnfollows
             CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
 
             MobileAds.Initialize(this, "ca-app-pub-9927527797473679~9358311233");
-           
-            
+
 
             userSession = new UserSessionData
             {
@@ -104,7 +103,8 @@ namespace WhoUnfollows
                 {
                     if (CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage).Result)
 
-                        Toast.MakeText(Application.Context, Resources.GetText(Resource.String.fileperrmisson), ToastLength.Long)
+                        Toast.MakeText(Application.Context, Resources.GetText(Resource.String.fileperrmisson),
+                                ToastLength.Long)
                             .Show();
 
                     status = CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
@@ -185,12 +185,13 @@ namespace WhoUnfollows
             if (status != PermissionStatus.Granted)
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
-                    
-                    Toast.MakeText(Application.Context, Resources.GetText(Resource.String.fileperrmisson), ToastLength.Long).Show();
+
+                    Toast.MakeText(Application.Context, Resources.GetText(Resource.String.fileperrmisson),
+                        ToastLength.Long).Show();
 
                 status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
             }
-            
+
             yuklemeBar.Visibility = ViewStates.Visible;
 
             if (txtEmail.Text.Length <= 0 || txtPassword.Text.Length <= 0)
@@ -199,13 +200,13 @@ namespace WhoUnfollows
                 yuklemeBar.Visibility = ViewStates.Invisible;
                 return;
             }
-            
+
             userSession = new UserSessionData
             {
                 UserName = txtEmail.Text,
                 Password = txtPassword.Text
             };
-            
+
             _instaApi = InstaApiBuilder.CreateBuilder()
                 .SetUser(userSession)
                 .UseLogger(new DebugLogger(LogLevel.Exceptions))
@@ -217,18 +218,84 @@ namespace WhoUnfollows
                 var logInResult = await _instaApi.LoginAsync();
                 if (!logInResult.Succeeded)
                 {
-                    Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long).Show();
+                    switch (logInResult.Value)
+                    {
+                        case InstaLoginResult.TwoFactorRequired:
+                        {
+                            EditText et = new EditText(this);
+                            AlertDialog.Builder ad = new AlertDialog.Builder(this);
+                            ad.SetTitle("Two Factor Code Required");
+                            ad.SetView(et);
+                        
+
+                            ad.SetPositiveButton("OK", async delegate
+                                {
+                                    var twoFactorLogin = await _instaApi.TwoFactorLoginAsync(et.Text);
+
+                                    if (twoFactorLogin.Succeeded)
+                                    {
+                                        await girisYapti(button, _instaApi);
+                                    }
+                                    else
+                                    {
+                                        Toast.MakeText(Application.Context, twoFactorLogin.Info.Message, ToastLength.Long)
+                                            ?.Show();
+                                        HataGoster(twoFactorLogin.Info.Message);
+                                    }
+
+                                    ad.Dispose();
+                                }
+                            );
+                        
+                            ad.Show();
+                            break;
+                        }
+                        case InstaLoginResult.ChallengeRequired:
+                        {
+                            var challenge = await _instaApi.GetChallengeRequireVerifyMethodAsync();
+                            if (challenge.Succeeded)
+                            {
+                                await girisYapti(button, _instaApi);
+                                return;
+                            }
+                            else
+                            {
+                                Toast.MakeText(Application.Context, challenge.Info.Message, ToastLength.Long)?.Show();
+                                HataGoster(challenge.Info.Message);
+                            }
+
+                            break;
+                        }
+                        case InstaLoginResult.Success:
+                            break;
+                        case InstaLoginResult.BadPassword:
+                            break;
+                        case InstaLoginResult.InvalidUser:
+                            break;
+                        case InstaLoginResult.Exception:
+                            break;
+                        case InstaLoginResult.LimitError:
+                            break;
+                        case InstaLoginResult.InactiveUser:
+                            break;
+                        case InstaLoginResult.CheckpointLoggedOut:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+
+                    Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long)?.Show();
                     HataGoster(logInResult.Info.Message);
                     yuklemeBar.Visibility = ViewStates.Invisible;
                     return;
                 }
+
                 await girisYapti(button, _instaApi);
-                var state = _instaApi.GetStateDataAsStream();
-                using (var fileStream = File.Create(stateFile))
-                {
-                    state.Seek(0, SeekOrigin.Begin);
-                    state.CopyTo(fileStream);
-                }
+                var state = await _instaApi.GetStateDataAsStreamAsync();
+                await using var fileStream = File.Create(stateFile);
+                state.Seek(0, SeekOrigin.Begin);
+                await state.CopyToAsync(fileStream);
             }
         }
 
@@ -253,17 +320,17 @@ namespace WhoUnfollows
             ActionBar.Show();
 
             var adview = FindViewById<AdView>(Resource.Id.adView);
-            
+
 
             var adRequest = new AdRequest.Builder().Build();
             adview.LoadAd(adRequest);
 
             var adview2 = FindViewById<AdView>(Resource.Id.adView2);
-            
+
 
             var adRequest2 = new AdRequest.Builder().Build();
             adview2.LoadAd(adRequest2);
-            
+
 
             rAnaSayfa = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
             rTakipci = FindViewById<RelativeLayout>(Resource.Id.takipcilerSayfasi);
@@ -534,7 +601,6 @@ namespace WhoUnfollows
                     yukleme.Visibility = ViewStates.Invisible;
                     anaekran.Visibility = ViewStates.Visible;
                     ActionBar.Show();
-                    
                 }
             }
         }

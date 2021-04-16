@@ -17,6 +17,7 @@ using InstagramApiSharp;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
+using InstagramApiSharp.Classes.Models;
 using InstagramApiSharp.Logger;
 using Java.Lang;
 using Plugin.Permissions;
@@ -43,6 +44,7 @@ namespace WhoUnfollows
         private IInstaApi _instaApi;
         private InterstitialAd interstitialAd;
         private IInstaApi _instaApi2;
+        private string LatestMaxId = "";
         private int imageIndex = 0;
         private RelativeLayout rAnaSayfa;
         private RelativeLayout rHakkinda;
@@ -545,9 +547,35 @@ namespace WhoUnfollows
             var intent = new Intent(Intent.ActionView, uri);
             StartActivity(intent);
         }
+        
+        InstaUserShortList List = new InstaUserShortList();
+        private async Task<bool> TakipciGetir(long UserId)
+        {
+            
+            IInstaApi instaApi;
+
+            if (_instaApi != null)
+                instaApi = _instaApi;
+            else
+                instaApi = _instaApi2;
+
+            var followers = await instaApi.UserProcessor
+                .GetUserFollowersByIdAsync(UserId, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(LatestMaxId));
+
+            LatestMaxId = followers.Value.NextMaxId;
+            if (followers.Succeeded)
+            {
+                List.AddRange(followers.Value);
+                return true;
+            }
+            else
+                return false;
+        }
 
         private async void refresh_clickAsync(object sender, EventArgs e)
         {
+        
+            
             var anaekran = FindViewById<RelativeLayout>(Resource.Id.AnaSayfa);
             anaekran.Visibility = ViewStates.Invisible;
 
@@ -574,11 +602,19 @@ namespace WhoUnfollows
                 
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(2,3));
 
-                var result = instaApi.UserProcessor.GetCurrentUserFollowersAsync(
-                    PaginationParameters.Empty);
+                //var result = instaApi.UserProcessor.GetUserFollowersByIdAsync(instaApi.GetLoggedUser().LoggedInUser.Pk, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(null));
 
-                var result2 = instaApi.UserProcessor.GetUserFollowingAsync(
-                    instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"");
+                var result2 = instaApi.UserProcessor.GetUserFollowingByIdAsync(instaApi.GetLoggedUser().LoggedInUser.Pk, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(null),"");
+                
+                do
+                {
+                    var flag = await TakipciGetir(instaApi.GetLoggedUser().LoggedInUser.Pk);
+                } while (LatestMaxId != null);
+                
+                
+                
+                
+                
                 
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(0,3));
 
@@ -586,7 +622,7 @@ namespace WhoUnfollows
                 //     throw new Error();
 
                 var following = result2.Result.Value;
-                var followers = result.Result.Value;
+                var followers = List;
 
                 var takipetmeyenler = following.Except(followers).ToList();
                 var hayranlar = followers.Except(following).ToList();

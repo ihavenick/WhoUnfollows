@@ -120,12 +120,15 @@ namespace WhoUnfollows
                     _instaApi2.LoadStateDataFromStream(fs);
                     if (_instaApi2.IsUserAuthenticated)
                     {
-                        var result2 = Task.Run(async () => await _instaApi2.UserProcessor.GetUserFollowingAsync(
-                            _instaApi2.GetLoggedUser().LoggedInUser.UserName,
-                            PaginationParameters.MaxPagesToLoad(1))).Result;
-                        var following = result2.Value;
+                        // var result2 = Task.Run(async () => await _instaApi2.UserProcessor.GetUserFollowingAsync(
+                        //     _instaApi2.GetLoggedUser().LoggedInUser.UserName,
+                        //     PaginationParameters.MaxPagesToLoad(1))).Result;
+                        // var following = result2.Value;
 
-                        if (following == null)
+                        var result2 = Task.Run(async () => await _instaApi2.WebProcessor.GetAccountInfoAsync());
+                        var following = result2.Result;
+
+                        if (!following.Succeeded)
                         {
                             _instaApi2.LogoutAsync();
                             File.Delete(stateFile);
@@ -447,11 +450,12 @@ namespace WhoUnfollows
                 var result2 = await instaApi.UserProcessor.GetUserFollowingAsync(
                     instaApi.GetLoggedUser().LoggedInUser.UserName, PaginationParameters.Empty,"");
                 
-                instaApi.SetTimeout(TimeSpan.FromMinutes(10));
+                
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(0,3));
 
                 if (result.Succeeded || result2.Succeeded)
-                    refresh_clickAsync(button, new EventArgs());
+                    //refresh_clickAsync(button, new EventArgs());
+                    HataGoster(result.Info + " " + result2.Info);
 
                 var following = result2.Value;
                 var followers = result.Value;
@@ -567,8 +571,7 @@ namespace WhoUnfollows
                 var takipciler = FindViewById<TextView>(Resource.Id.takipciler);
                 var takipedilenler = FindViewById<TextView>(Resource.Id.takipedilenler);
                 var kullaniciAdi = FindViewById<TextView>(Resource.Id.kullaniciAdi);
-
-                instaApi.SetTimeout(TimeSpan.FromMinutes(10));
+                
                 instaApi.SetRequestDelay(RequestDelay.FromSeconds(2,3));
 
                 var result = await instaApi.UserProcessor.GetCurrentUserFollowersAsync(

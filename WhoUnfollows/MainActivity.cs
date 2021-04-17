@@ -11,6 +11,7 @@ using Android.Gms.Ads;
 using Android.Gms.Ads.AppOpen;
 using Android.Graphics;
 using Android.OS;
+using Android.Text;
 using Android.Views;
 using Android.Widget;
 using InstagramApiSharp;
@@ -42,9 +43,7 @@ namespace WhoUnfollows
         private readonly List<TableItem> tableItems = new List<TableItem>();
 
         private IInstaApi _instaApi;
-        private InterstitialAd interstitialAd;
         private IInstaApi _instaApi2;
-        private int imageIndex = 0;
         private RelativeLayout rAnaSayfa;
         private RelativeLayout rHakkinda;
         private RelativeLayout rHayran;
@@ -229,14 +228,24 @@ namespace WhoUnfollows
                     {
                         case InstaLoginResult.TwoFactorRequired:
                         {
-                            EditText et = new EditText(this);
-                            AlertDialog.Builder ad = new AlertDialog.Builder(this);
+                            var et = new EditText(this);
+                            var ad = new AlertDialog.Builder(this);
+                            et.InputType = InputTypes.ClassNumber;
+                            
                             ad.SetTitle("Two Factor Code Required");
                             ad.SetView(et);
-                        
-
+                            ad.SetCancelable(false);
+                            
                             ad.SetPositiveButton("OK", async delegate
                                 {
+                                    ad.Dispose();
+                                    yuklemeBar.Visibility = ViewStates.Visible;
+
+                                    if (et.Text == null && et.Text.Length<5)
+                                    {
+                                        HataGoster("2 Factor code cannot be shorter than 6");
+                                    }
+                                    
                                     var twoFactorLogin = await _instaApi.TwoFactorLoginAsync(et.Text);
 
                                     if (twoFactorLogin.Succeeded)
@@ -254,7 +263,7 @@ namespace WhoUnfollows
                                         HataGoster(twoFactorLogin.Info.Message);
                                     }
 
-                                    ad.Dispose();
+                                    
                                 }
                             );
                         
@@ -285,23 +294,28 @@ namespace WhoUnfollows
                             break;
                         case InstaLoginResult.BadPassword:
                             HataGoster(logInResult.Info.Message);
+                            yuklemeBar.Visibility = ViewStates.Invisible;
                             break;
                         case InstaLoginResult.InvalidUser:
                             HataGoster(logInResult.Info.Message);
+                            yuklemeBar.Visibility = ViewStates.Invisible;
                             break;
                         case InstaLoginResult.Exception:
                             Toast.MakeText(Application.Context, logInResult.Info.Message, ToastLength.Long)?.Show();
                             HataGoster(logInResult.Info.Message);
+                            yuklemeBar.Visibility = ViewStates.Invisible;
                             break;
                         case InstaLoginResult.LimitError:
                             HataGoster(logInResult.Info.Message);
+                            yuklemeBar.Visibility = ViewStates.Invisible;
                             break;
                         case InstaLoginResult.InactiveUser:
                             HataGoster(logInResult.Info.Message);
+                            yuklemeBar.Visibility = ViewStates.Invisible;
                             break;
                         case InstaLoginResult.CheckpointLoggedOut:
                             HataGoster(logInResult.Info.Message);
-                            
+                            yuklemeBar.Visibility = ViewStates.Invisible;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using InstagramApiSharp;
 using InstagramApiSharp.API;
@@ -13,7 +14,8 @@ namespace WhoUnfollows
 {
     public class UserState
     {
-        public UserState()
+        private readonly HttpClient http;
+        public UserState(HttpClient http)
         {
             isLoggedIn = false;
         }
@@ -95,6 +97,7 @@ namespace WhoUnfollows
 
             _ınstaApi = InstaApiBuilder.CreateBuilder()
                 .SetUser(user)
+                .UseHttpClient(http)
                 .SetRequestDelay(RequestDelay.FromSeconds(0,1))
                 .Build();
             
@@ -155,6 +158,7 @@ namespace WhoUnfollows
 
                 _ınstaApi = InstaApiBuilder.CreateBuilder()
                     .SetUser(user)
+                    .UseHttpClient(http)
                     .SetRequestDelay(RequestDelay.FromSeconds(0,1))
                     .Build();
                         

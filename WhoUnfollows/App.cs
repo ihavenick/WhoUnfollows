@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.MobileBlazorBindings;
 using MudBlazor.Services;
@@ -17,11 +19,14 @@ namespace WhoUnfollows
                     services.AddBlazorHybrid();
                     services.AddMudServices();
 
+                    services.AddScoped(sp => new HttpClient() {BaseAddress = new Uri("https://i.instagram.com/"),});
+
                     // Register app-specific services
                     services.AddSingleton<CounterState>();
                     services.AddSingleton<UserState>();
                 })
                 .UseWebRoot("wwwroot");
+            
 
             if (fileProvider != null)
                 hostBuilder.UseStaticFiles(fileProvider);

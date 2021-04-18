@@ -32,9 +32,6 @@ namespace WhoUnfollows
         public int FollowingCount { get; private set; }
 
         public int NotFollowingCount { get; private set; }
-        
-        
-        public bool twoFactor { get; private set; }
 
         public bool isLoggedIn { get; private set; }
 
@@ -79,68 +76,11 @@ namespace WhoUnfollows
 
             return false;
         }
-        
-        public async Task<string> TwoFactorLogin(string username,string password,string twoFactorCode)
+
+        public async Task<bool> Login(string username, string password)
         {
-            if (username.Length<=0 && password.Length<=0 && twoFactorCode.Length<=0)
-            {
-                Console.WriteLine("BBoş geldi meeku");
-            }
             
-            // var user = new UserSessionData
-            // {
-            //     UserName = username,
-            //     Password = password
-            // };
-            //
-            // InstaApi = InstaApiBuilder.CreateBuilder()
-            //     .SetUser(user)
-            //     .Build();
-            //
-            // await InstaApi.LoginAsync();
-            
-            var twoFactorLogin = await InstaApi.TwoFactorLoginAsync(twoFactorCode);
-          
-            
-            if (!twoFactorLogin.Succeeded)
-                return twoFactorLogin.Info.Message;
-            
-            var state = InstaApi.GetStateDataAsStream();
-            await using var fileStream = File.Create(stateFile);
-            state.Seek(0, SeekOrigin.Begin);
-            await state.CopyToAsync(fileStream);
-            
-            var _InstaUser = await InstaApi.GetCurrentUserAsync();
-            if (!_InstaUser.Succeeded)
-            {
-                return _InstaUser.Info.Message;
-            }
-            
-            
-            InstaUser = _InstaUser.Value;
-            Avatar = _InstaUser.Value.ProfilePicture;
-            
-            var followers = await InstaApi.GetCurrentUserFollowersAsync(PaginationParameters.Empty);
-            var followings = await InstaApi.GetUserFollowingAsync(username, PaginationParameters.Empty);
-
-            var nofollowers = followings.Value.Except(followers.Value).ToList();
-            FollowersCount = followers.Value.Count;
-            FollowingCount = followings.Value.Count;
-            NotFollowers = nofollowers;
-            NotFollowingCount = nofollowers.Count;
-
-            isLoggedIn = true;
-            
-            StateChanged?.Invoke();
-
-            return "true";
-        }
-        
-        
-        
-
-        public async Task<string> Login(string username, string password)
-        {
+           
                 var user = new UserSessionData
                 {
                     UserName = username,
@@ -152,20 +92,8 @@ namespace WhoUnfollows
                     .Build();
                         
                 var loggedIn = await InstaApi.LoginAsync();
-                
-                
 
-                if (!loggedIn.Succeeded)
-                {
-                    if (loggedIn.Value == InstaLoginResult.TwoFactorRequired)
-                    {
-                        twoFactor = true;
-                        //StateChanged?.Invoke();
-                        return "twofactor";
-                    }
-
-                    return loggedIn.Info.Message;
-                }
+                if (!loggedIn.Succeeded) return false;
             
             
             
@@ -189,7 +117,7 @@ namespace WhoUnfollows
             isLoggedIn = true;
             StateChanged?.Invoke();
             
-            return "true";
+            return true;
         }
         
 

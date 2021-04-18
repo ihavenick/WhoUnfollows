@@ -1,0 +1,60 @@
+@page "/fetchdata"
+@using InstaSharper.Classes.Models
+@using Color = MudBlazor.Color
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
+    <MudText Typo="Typo.h3" GutterBottom="true">Unfollowers</MudText>
+    <MudText Class="mb-8">See who not following you</MudText>
+
+    @if (notFollowers == null)
+    {
+        <MudCard>
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px"/>
+            <MudCardContent>
+                <MudSkeleton Width="30%" Height="42px;"/>
+                <MudSkeleton Width="80%"/>
+                <MudSkeleton Width="100%"/>
+            </MudCardContent>
+            <MudCardActions>
+                <MudSkeleton Width="64px" Height="40px" Class="ml-2"/>
+                <MudSkeleton Width="105px" Height="40px" Class="ml-3"/>
+            </MudCardActions>
+        </MudCard>
+    }
+    else
+    {
+        @foreach (var item in notFollowers)
+        {
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary" Style="height: 60px;width: 60px;">
+                            <img src="@item.ProfilePicture"/>
+                        </MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">@item.UserName</MudText>
+                        <MudText Typo="Typo.body2">@item.FullName</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Crop" Color="Color.Default"/>
+                    </CardHeaderActions>
+                </MudCardHeader>
+            </MudCard>
+
+            <br/>
+        }
+    }
+
+</MudContainer>
+
+@code {
+    private List<InstaUserShort> notFollowers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserState.isLoggedIn)
+            notFollowers = UserState.NotFollowers;
+    }
+
+}

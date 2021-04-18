@@ -1,0 +1,29 @@
+﻿@inject CounterState CounterState
+@inject UserState UserState
+
+<ContentView>
+    <StackLayout>
+
+        <BlazorWebView VerticalOptions="LayoutOptions.FillAndExpand">
+            <WhoUnfollows.WebUI.App/>
+        </BlazorWebView>
+
+    </StackLayout>
+</ContentView>
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        UserState.StateChanged += StateHasChanged;
+        CounterState.StateChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CounterState.StateChanged -= StateHasChanged;
+        UserState.StateChanged -= StateHasChanged;
+    }
+
+}

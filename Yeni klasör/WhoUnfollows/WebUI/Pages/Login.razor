@@ -1,7 +1,5 @@
 ﻿@page "/Login"
 @using Color = MudBlazor.Color
-@using Microsoft.AspNetCore.Components
-@using System.Threading.Tasks
 @inject NavigationManager NavigationManager
 
 <style>
@@ -110,20 +108,15 @@
         </MudCard>
 
 
-        <MudMessageBox @ref="mbox" Title="Warning" CancelText="Cancel">
-            <MessageContent>
-                <MudTextField T="string" Label="Two factor code"
-                              HelperText="Your Instagram Credinals"
-                              @ref="twofactorCode"
-                              InputType="InputType.Text" Required="true"
-                              RequiredError="Password is required!"/>
-            </MessageContent>
-            <YesButton>
-                <MudButton OnClick="@(async () =>  TwoFactorLogin())" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Login!</MudButton>
-            </YesButton>
-        </MudMessageBox>
-        
-        
+        @* <MudExpansionPanels> *@
+        @*     <MudExpansionPanel Text="@($"Show Errors ({errors.Length})")"> *@
+        @*         @foreach (var error in errors) *@
+        @*         { *@
+        @*             <MudText Color="@Color.Error">@error</MudText> *@
+        @*         } *@
+        @*     </MudExpansionPanel> *@
+        @* </MudExpansionPanels> *@
+        @* </div> *@
     </MudGrid>
 </MudContainer>
 
@@ -135,10 +128,6 @@
     MudTextField<string> passwordfield;
     MudTextField<string> usernamefield;
     MudForm form;
-    MudMessageBox mbox { get; set; }
-    MudTextField<string> twofactorCode;
-    [Inject] private IDialogService DialogService { get; set; }
-    
 
     private async Task LoginButton()
     {
@@ -147,38 +136,13 @@
             loading = true;
             var sucsess = await UserState.Login(usernamefield.Text.ToLower(), passwordfield.Text);
 
-            switch (sucsess)
+            if (sucsess)
             {
-                case "true":
-                    NavigationManager.NavigateTo("/");
-                    break;
-                case "twofactor":
-                    await mbox.Show();
-    //StateHasChanged();
-                    break;
-                default:
-                    DialogService.Show<OkDialog>(sucsess);
-                    break;
+                NavigationManager.NavigateTo("/");
             }
             loading = false;
         }
     }
     
-    
-    private async void TwoFactorLogin()
-    {
-        loading = true;
-        var result = await UserState.TwoFactorLogin(usernamefield.Text.ToLower(), passwordfield.Text,twofactorCode.Text);
-        if (result=="true")
-        {
-            StateHasChanged();
-            NavigationManager.NavigateTo("/");
-        }
-        else
-        {
-            DialogService.Show<OkDialog>(result);
-        }
-        loading = false;
-    }
 
 }

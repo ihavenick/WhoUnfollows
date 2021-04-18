@@ -8,7 +8,7 @@
     <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
 
         <MudGrid Justify="Justify.Center">
-            <img class="mud-typography-align-center" src="@UserState.Avatar"/>
+            @* <img class="mud-typography-align-center" src="@UserState.Avatar"/> *@
         </MudGrid>
 
         <MudText></MudText>
@@ -104,7 +104,8 @@ else
     
      protected override async Task OnInitializedAsync()
      {
-         if (UserState.isLoggedIn) return;
+         if (UserState.isLoggedIn)
+             return;
         
          var sucsess = await UserState.tryToLoginAsync();
          if (!sucsess)

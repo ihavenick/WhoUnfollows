@@ -18,10 +18,10 @@ namespace WhoUnfollows
             isLoggedIn = false;
         }
 
-        private IInstaApi InstaApi;
+        public IInstaApi _ınstaApi { get; private set; }
         public InstaCurrentUser InstaUser { get; private set; }
 
-        public string Avatar { get; private set; }
+        public string Avatar { get; set; }
 
         private static readonly string dosyayolu = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         private readonly string stateFile = Path.Combine(dosyayolu, "state.bin");
@@ -43,28 +43,27 @@ namespace WhoUnfollows
             if (File.Exists(stateFile))
             {
                 await using var fs = File.OpenRead(stateFile);
-                InstaApi =  InstaApiBuilder.CreateBuilder()
+                _ınstaApi =  InstaApiBuilder.CreateBuilder()
                     .SetUser(UserSessionData.Empty)
                     .Build();
                     
-                await InstaApi.LoadStateDataFromStreamAsync(fs);
-                if (!InstaApi.IsUserAuthenticated) return false;
-                var result2 = await InstaApi.GetCurrentUserAsync();
-                        
+                await _ınstaApi.LoadStateDataFromStreamAsync(fs);
+                if (!_ınstaApi.IsUserAuthenticated) return false;
+                
+                var result2 = await _ınstaApi.UserProcessor.GetCurrentUserAsync();
+
                 if (!result2.Succeeded)
                 {
-                    await InstaApi.LogoutAsync();
+                    await _ınstaApi.LogoutAsync();
                     File.Delete(stateFile);
                        
                     return false;
                 }
                 
-                
-                    
                 InstaUser = result2.Value;
                 Avatar = result2.Value.ProfilePicture;
-                var followers = await InstaApi.UserProcessor.GetCurrentUserFollowersAsync(PaginationParameters.Empty);
-                var followings = await InstaApi.UserProcessor.GetUserFollowingAsync(InstaUser.UserName, PaginationParameters.Empty);
+                var followers = await _ınstaApi.UserProcessor.GetCurrentUserFollowersAsync(PaginationParameters.Empty);
+                var followings = await _ınstaApi.UserProcessor.GetUserFollowingAsync(InstaUser.UserName, PaginationParameters.Empty);
 
                 var nofollowers = followings.Value.Except(followers.Value).ToList();
                 FollowersCount = followers.Value.Count;
@@ -80,36 +79,64 @@ namespace WhoUnfollows
             return false;
         }
 
-        public async Task<bool> TwoFactorLogin(string twoFactorCode)
+      
+        public async Task<string> TwoFactorLogin(string username,string password,string twoFactorCode)
         {
-            var twoFactorLogin = await InstaApi.TwoFactorLoginAsync(twoFactorCode);
+            if (username.Length<=0 && password.Length<=0 && twoFactorCode.Length<=0)
+            {
+                Console.WriteLine("BBoş geldi meeku");
+            }
             
-            if (!twoFactorLogin.Succeeded) return false;
+            var user = new UserSessionData
+            {
+                UserName = username,
+                Password = password
+            };
 
-            var test = await InstaApi.UserProcessor.GetCurrentUserAsync();
-            InstaUser = test.Value;
-            Avatar = test.Value.ProfilePicture;
-            var followers = await InstaApi.UserProcessor.GetCurrentUserFollowersAsync(PaginationParameters.Empty);
-            var followings = await InstaApi.UserProcessor.GetUserFollowingAsync(InstaUser.UserName, PaginationParameters.Empty);
+            _ınstaApi = InstaApiBuilder.CreateBuilder()
+                .SetUser(user)
+                .SetRequestDelay(RequestDelay.FromSeconds(0,1))
+                .Build();
+            
+            await _ınstaApi.LoginAsync();
+            
+            var twoFactorLogin = await _ınstaApi.TwoFactorLoginAsync(twoFactorCode);
+          
+            
+            if (!twoFactorLogin.Succeeded)
+                return twoFactorLogin.Info.Message;
+            
+            await SaveSession();
+            
+            var _InstaUser = await _ınstaApi.UserProcessor.GetCurrentUserAsync();
+            if (!_InstaUser.Succeeded)
+            {
+                return _InstaUser.Info.Message;
+            }
+            
+            
+            InstaUser = _InstaUser.Value;
+            Avatar = _InstaUser.Value.ProfilePicture;
+            
+            var followers = await _ınstaApi.UserProcessor.GetCurrentUserFollowersAsync(PaginationParameters.Empty);
+            var followings = await _ınstaApi.UserProcessor.GetUserFollowingAsync(username, PaginationParameters.Empty);
 
             var nofollowers = followings.Value.Except(followers.Value).ToList();
             FollowersCount = followers.Value.Count;
             FollowingCount = followings.Value.Count;
             NotFollowers = nofollowers;
             NotFollowingCount = nofollowers.Count;
-            isLoggedIn = true;
-            StateChanged?.Invoke();
-            
-            
-            
-            await SaveSession();
-            return true;
 
+            isLoggedIn = true;
+            
+            StateChanged?.Invoke();
+
+            return "true";
         }
 
         private async Task SaveSession()
         {
-            var state = await InstaApi.GetStateDataAsStreamAsync();
+            var state = await _ınstaApi.GetStateDataAsStreamAsync();
             await using var fileStream = File.Create(stateFile);
             state.Seek(0, SeekOrigin.Begin);
             await state.CopyToAsync(fileStream);
@@ -126,12 +153,12 @@ namespace WhoUnfollows
                     Password = password
                 };
 
-                InstaApi = InstaApiBuilder.CreateBuilder()
+                _ınstaApi = InstaApiBuilder.CreateBuilder()
                     .SetUser(user)
                     .SetRequestDelay(RequestDelay.FromSeconds(0,1))
                     .Build();
                         
-                var loggedIn = await InstaApi.LoginAsync();
+                var loggedIn = await _ınstaApi.LoginAsync();
 
                 if (!loggedIn.Succeeded)
                 {
@@ -147,11 +174,11 @@ namespace WhoUnfollows
             
             
             
-            var _InstaUser = await InstaApi.GetCurrentUserAsync();
+            var _InstaUser = await _ınstaApi.GetCurrentUserAsync();
             InstaUser = _InstaUser.Value;
             Avatar = _InstaUser.Value.ProfilePicture;
-            var followers = await InstaApi.UserProcessor.GetCurrentUserFollowersAsync(PaginationParameters.Empty);
-            var followings = await InstaApi.UserProcessor.GetUserFollowingAsync(username, PaginationParameters.Empty);
+            var followers = await _ınstaApi.UserProcessor.GetCurrentUserFollowersAsync(PaginationParameters.Empty);
+            var followings = await _ınstaApi.UserProcessor.GetUserFollowingAsync(username, PaginationParameters.Empty);
 
             var nofollowers = followings.Value.Except(followers.Value).ToList();
             FollowersCount = followers.Value.Count;
@@ -171,7 +198,7 @@ namespace WhoUnfollows
         public void Logout()
         {
             isLoggedIn = false;
-            InstaApi.LogoutAsync();
+            _ınstaApi.LogoutAsync();
             File.Delete(stateFile);
             InstaUser = null;
             FollowersCount = 0;
